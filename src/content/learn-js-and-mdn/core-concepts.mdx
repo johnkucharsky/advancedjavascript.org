@@ -1,22 +1,16 @@
 ---
-title: JavaScript Core Concepts - this, bind, loops, generators
-description: JavaScript concepts through practical code snippets, including `this` context, binding, async generators, loop behavior, and object-to-map conversions.
+title: JavaScript Core Concepts - this, bind, loops
+description: Practice JavaScript this binding, bind, loop behavior, object-to-map conversion, async generators, and Fibonacci examples.
 sidebarTitle: Core Concepts
 ---
 
 # JavaScript Core Concepts – this, bind, loops, generators, and more
 
-A curated collection of essential JavaScript concepts often asked about in interviews and critical for writing robust code.
-Each topic is backed by practical examples, real-world context, and explanations that help you **understand how and why** things work —
-not just memorize syntax.
+Small language behaviors cause real bugs: lost `this`, pre/post increment differences, object/map conversion, bound callbacks, async iteration, and recursive complexity. Each example is short enough to trace line by line.
 
 ## Understanding this
 
-Below `users.customFilterNoThis(army.canJoin)`, throws, `army.canJoin` was called
-as a standalone function, with `this=undefined`, thus leading to an instant error.
-A call to `users.customFilter(army.canJoin, army)` can be replaced with
-`users.customFilterNoThis(user => army.canJoin(user))`, that does the same.
-This is an object before dot
+`army.canJoin` depends on `this.minAge` and `this.maxAge`. When it is passed as a standalone callback, the object before the dot is gone, so `this` becomes `undefined`. You can fix that either by calling the callback with an explicit `thisArg`, or by wrapping the call in an arrow function that calls `army.canJoin(user)` directly.
 
 ```js filename="this" copy
 Array.prototype.customFilter = function (callback, thisArg) {
@@ -65,7 +59,7 @@ console.log(soldiers3); // [ { age: 20 }, { age: 23 } ]
 
 ## Loop Behavior: Pre/Post Increment
 
-This example highlights the subtle differences between `++i` (pre-increment) and `i++` (post-increment) in `while` loops, and how they affect loop behavior and output.
+`++i` increments before the condition is checked. `i++` increments after the old value is used in the condition. That difference is visible in `while` loops because the condition and increment happen in the same expression.
 
 It also compares `for` loops using `i++` vs `++i`, which behave the same in this context, since the increment happens after the loop body executes.
 
@@ -85,10 +79,9 @@ for (let i = 0; i < 3; ++i) console.log(i);
 // 0, 1, 2
 ```
 
-
 ## Object and Map Conversion
 
-This example shows how to convert between plain JavaScript objects and `Map` instances using `Object.entries()` and `Object.fromEntries()`.
+Use `Object.entries()` to turn an object into key/value pairs, and `Object.fromEntries()` to turn key/value pairs back into an object.
 
 These methods are useful when working with APIs or libraries that prefer one format over the other, or when you need key ordering and additional `Map` features.
 
@@ -120,12 +113,7 @@ console.log(mapFromObject.get("meat")); // 4
 
 ## bind
 
-This example demonstrates how the `bind` method is used to fix the `this` context of a function.
-
-In JavaScript, methods like `setTimeout` lose the original object context when passing a function reference.
-Using `bind`, we can permanently associate a method with its object (`user`), ensuring `this.firstName` refers to the correct value.
-
-This is useful when passing object methods as callbacks, especially in asynchronous operations.
+`bind()` creates a new function with `this` fixed to a specific object. That matters when an object method is passed to `setTimeout` or another callback API and would otherwise be called without its owner.
 
 ```js filename="bind" copy
 const user = {
@@ -154,11 +142,10 @@ setTimeout(sayHi, 0); // Hello, John!
 
 ## Async Generators
 
-This example demonstrates how to use an `async function*` (asynchronous generator) to yield values over time with a delay.
+An `async function*` can yield values over time. Here, each value waits one second before it is produced.
 The `generateSequence` function yields numbers from `start` to `end`, waiting one second between each using `await`.
 
-The `for await...of` loop is used to consume the generator asynchronously, making it perfect for streaming data,
-timers, or controlled iteration over async events.
+`for await...of` consumes the sequence one value at a time, which is the same pattern used for streams and controlled async iteration.
 
 ```js filename="async generator" copy
 async function* generateSequence(start, end) {
@@ -184,9 +171,9 @@ timer(console.log).catch(console.error);
 The [Fibonacci sequence](https://en.wikipedia.org/wiki/Fibonacci_number) is a series where each number is the sum of the two preceding ones:
 **`1, 1, 2, 3, 5, 8, 13, 21, ...`**
 
-This example shows two ways to calculate the `n`-th Fibonacci number:
+Two implementations are shown because they teach different trade-offs:
 
-### 🔁 Iterative Approach
+### Iterative Approach
 
 Efficient and suitable for large values of `n` (like 77). Uses a loop and keeps track of the last two values.
 
@@ -207,9 +194,9 @@ console.log(fib(7)); // 13
 console.log(fib(77)); // 5527939700884757
 ```
 
-### 🔁 Recursive Approach
-Elegant but inefficient for large `n` due to repeated calculations (exponential time complexity). Best for learning recursion.
+### Recursive Approach
 
+Compact, but inefficient for large `n` because it repeats the same calculations many times. Use it to understand recursion, not for performance.
 
 ```js filename="fibonacci recursive" copy
 function fib(n) {

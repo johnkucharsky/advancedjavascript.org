@@ -1,26 +1,20 @@
 ---
-title: Understanding `this` in JavaScript Object Methods
-description: Learn how `this` behaves in JavaScript object methods, arrow functions, async callbacks, and class methods with clear examples and gotchas.
+title: JavaScript this in Object Methods
+description: See how JavaScript this behaves in object methods, arrow functions, async callbacks, call, classes, and prototype methods.
 sidebarTitle: This and Object Methods
 ---
 
 # JavaScript Object Methods and `this` Behavior
 
-Understanding how `this` works inside objects, functions, and classes is essential for mastering JavaScript.
+`this` is decided by how a function is called, not where the function is written. The examples focus on the cases that create bugs: detached methods, arrows inside methods, `setTimeout`, class methods, and prototype inheritance.
 
-This guide walks you through the nuances of `this` across different method contexts — including arrow functions, method chaining, `setTimeout`, class methods,
-and prototype inheritance — with clear code examples and pitfalls to avoid.
+Track the call site in each example:
 
-It covers:
 - Method binding issues when referencing `this`
 - The difference between arrow functions and regular methods
 - Preserving `this` in callbacks
 - Returning `this` for method chaining
 - Context behavior in `class` methods and prototype chains
-
-Understanding these patterns is essential for working with objects, classes, and asynchronous code in JavaScript.
-
-[object-methods](https://javascript.info/object-methods)
 
 ```js copy
 let user = {
@@ -46,7 +40,7 @@ console.log(admin);
 // { name: 'John', age: 30, sayHi: [Function: sayHi] }
 ```
 
-## ❌ Accessing `user` directly inside a method
+## Accessing `user` directly inside a method
 
 Avoid directly referencing the object (`user`) inside its own method.
 If the object is reassigned or removed, the method will throw an error. Use `this` instead to safely access object properties.
@@ -75,7 +69,7 @@ console.log(admin);
 // { name: 'John', age: 30, sayHi: [Function: sayHi] }
 ```
 
-## 🔄 Arrow vs Regular Function and `this`
+## Arrow vs Regular Function and `this`
 
 Arrow functions don’t have their own `this` — they inherit it from the surrounding scope.
 In contrast, regular functions define their own `this`, which can lead to unexpected `undefined` values when used as methods.
@@ -102,7 +96,7 @@ const user2 = {
 user2.sayHi(); // undefined
 ```
 
-## ⚠️ `this` in object literals vs methods
+## `this` in object literals vs methods
 
 When returning an object from a function, `this` does not refer to the object being created — it refers to the function's execution context.
 To correctly reference the object itself, define `ref` as a method so that `this` is bound to the object at call time.
@@ -141,7 +135,7 @@ console.log(user2.ref().name); // John
 // And the value of this is set to the object before dot
 ```
 
-## 🪜 Method Chaining with `this`
+## Method Chaining with `this`
 
 By returning `this` from each method, you enable **method chaining** — a clean and expressive way to perform multiple operations on the same object in sequence.
 
@@ -174,7 +168,7 @@ ladder.up().up().down().showStep().down().showStep();
 // shows 1 then 0
 ```
 
-## 🔍 `this` in Regular vs Arrow Methods
+## `this` in Regular vs Arrow Methods
 
 Regular functions bind `this` to the object they belong to, while arrow functions inherit `this`
 from the outer scope — which may lead to unexpected `undefined` or `NaN` values when used as methods.
@@ -194,7 +188,7 @@ console.log(obj1.regularMethod()); // 15
 console.log(obj1.arrowMethod()); // NaN
 ```
 
-## ⏱️ Preserving `this` in Async Callbacks
+## Preserving `this` in Async Callbacks
 
 In asynchronous functions like `setTimeout`, regular functions lose their `this` binding.
 Arrow functions capture `this` from their lexical scope, making them ideal for preserving context in async callbacks.
@@ -217,7 +211,7 @@ obj2.method(); // undefined
 obj2.methodArrow(); // 50
 ```
 
-## 🎯 Arrow Functions Preserve Context
+## Arrow Functions Preserve Context
 
 Arrow functions retain the `this` value from where they were defined.
 Even when the method is detached from the object, it still correctly references `this.value` from its original context.
@@ -237,7 +231,7 @@ const detachedMethod = example1.arrowMethod;
 detachedMethod(); // 30
 ```
 
-## ⚠️ Regular Functions Lose `this` When Detached
+## Regular Functions Lose `this` When Detached
 
 Regular functions bind `this` dynamically at call time.
 When a method is called standalone (detached from its object),
@@ -259,7 +253,7 @@ const detachedMethod = example1.regularMethod;
 detachedMethod(); // undefined
 ```
 
-## 🧭 `call` with Regular vs Arrow Functions
+## `call` with Regular vs Arrow Functions
 
 Regular functions can have their `this` explicitly set using `.call()`.
 Arrow functions, however, do not bind `this` and always inherit it from the
@@ -286,7 +280,7 @@ console.log(obj5.arrowMethod()); // undefined
 console.log(obj5.arrowMethod.call(anotherObj)); // undefined
 ```
 
-## 🔄 Arrow Function Captures Outer `this`
+## Arrow Function Captures Outer `this`
 
 When an arrow function is returned from a method, it keeps the `this` of its surrounding context — in this case, the `obj7` object.
 This allows the inner function to access `obj7.value` even when returned from another object.
@@ -307,7 +301,7 @@ const innerObj = obj.method();
 console.log(innerObj.getValue()); // 70
 ```
 
-## 🧩 `this` in Class Methods: Regular vs Arrow
+## `this` in Class Methods: Regular vs Arrow
 
 In class instances, regular methods lose `this` when detached, while arrow functions preserve the class context.
 Arrow methods defined as properties are especially useful when passing methods as callbacks or event handlers.
@@ -344,7 +338,7 @@ arrowFn();
 // MyClass { value: 40, arrowMethod: [Function: arrowMethod] }
 ```
 
-## 🚗 Inheriting Methods with `Object.create`
+## Inheriting Methods with `Object.create`
 
 Using `Object.create()`, you can create an object that inherits from another.
 Here, `myCar` inherits the `getInfo` method from `vehicle`, demonstrating how prototype-based inheritance works in JavaScript.

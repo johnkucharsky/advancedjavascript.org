@@ -1,20 +1,18 @@
 ---
-title: Native JavaScript Array Methods - Find, Includes, IndexOf
-description: Learn how JavaScript array methods like at, find, every, some, and includes work internally by recreating them from scratch.
+title: JavaScript Array Read Method Polyfills
+description: Implement JavaScript array methods like find, findIndex, at, every, includes, indexOf, and some with focused examples.
 sidebarTitle: Read Methods
 ---
 
 # Native JavaScript Array Methods - Read Methods
 
-This collection includes non-mutating JavaScript array methods reimplemented from scratch. Explore how methods like
-`find`, `at`, `every`, `some`, `includes`, and `indexOf` behave internally — all of which access or test array values without
-modifying the original array.
+Read methods answer questions about an array without changing it. Some return an element, some return an index, and some return a boolean. Rebuilding them makes the differences easier to remember than reading the API names in a list.
 
 ## Array.find
 
 The [`find`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find) method returns
 the **first element** in the array that satisfies the provided testing function.
-If no match is found, it returns `undefined`. Ideal for retrieving an item based on a condition without iterating the entire array manually.
+If no match is found, it returns `undefined`. The key detail is that it stops at the first match and returns the value, not the index.
 
 ```js filename="find" copy
 Array.prototype.customFind = function (callback) {
@@ -46,7 +44,7 @@ console.log(result1); // undefined
 
 The [`findIndex()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex)
 method returns the **index** of the first element that passes the provided test function.
-If no element matches, it returns `-1`. Useful for locating the position of an item instead of the item itself.
+If no element matches, it returns `-1`. Use this when the position matters more than the item itself.
 
 ```js filename="findIndex" copy
 Array.prototype.customFindIndex = function (callback) {
@@ -95,13 +93,14 @@ const array1 = [5, 12, 8, 130, 44];
 const found = array1.customFindLast((element) => element > 10);
 console.log(found); // 44
 ```
+
 ## Array.at
 
 The [`at()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at)
 method takes an integer and returns the item at that index — supporting both **positive and negative** integers.
 Negative values count from the end of the array, making it cleaner than using `array.length - index`.
 
-This example shows a custom implementation of `Array.prototype.at()` to mimic the native behavior.
+The custom version supports negative indexes by counting backward from the end of the array.
 
 ```js filename="at" copy
 Array.prototype.customAt = function (index) {
@@ -122,7 +121,7 @@ The [`every()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referenc
 method tests whether **all elements** in an array pass the test implemented by the provided callback.
 It returns a **boolean** — `true` if all elements satisfy the condition, and `false` otherwise.
 
-This example includes a custom implementation of `Array.prototype.every()` and shows how it can be used for subset checks.
+The custom version stops as soon as one item fails the predicate. The subset example uses that behavior to check whether every required value exists in another array.
 
 ```js filename="every" copy
 Array.prototype.customEvery = function (callback) {
@@ -149,14 +148,13 @@ console.log(isSubset([1, 2, 3, 4, 5, 6, 7], [5, 7, 6])); // true
 console.log(isSubset([1, 2, 3, 4, 5, 6, 7], [5, 8, 7])); // false
 ```
 
-
 ## Array.includes
 
 The [`includes()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
 method checks if an array contains a specific value, returning `true` or `false`.
 It uses the `SameValueZero` equality comparison — meaning it treats `NaN` as equal to `NaN`.
 
-This example includes a custom implementation of `Array.prototype.includes()` with support for optional `fromIndex` and negative indexing behavior.
+The custom version includes optional `fromIndex` support and negative indexing behavior.
 
 ```js filename="includes" copy
 function sameValueZero(x, y) {
@@ -264,4 +262,3 @@ console.log(array.customSome(even)); // true
 const equal90 = (element) => element === 90;
 console.log(array.customSome(equal90)); // false
 ```
-

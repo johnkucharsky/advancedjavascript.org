@@ -1,42 +1,16 @@
 ---
-title: Composition vs Inheritance in JavaScript
-description: Understand the differences between composition and inheritance in JavaScript.
+title: JavaScript Composition vs Inheritance
+description: Compare composition and inheritance in JavaScript with examples for function composition, classes, and call stack behavior.
 sidebarTitle: Composition vs Inheritance
 ---
 
 # Composition vs Inheritance in JavaScript
 
-Understand the trade-offs between **composition** and **inheritance** in JavaScript and React development. This guide walks through
-practical examples of function composition, class inheritance, and the JavaScript call stack to help you build cleaner, more flexible systems.
+Composition and inheritance are both reuse tools, but they create different constraints. The examples compare function composition, class inheritance, and the call stack mechanics behind recursive code.
 
-## composition
+## Composition
 
-Composition vs Inheritance
-People sometimes say “composition” when contrasting it with inheritance.
-This has less to do with functions (which we’ve been discussing all along)
-and more to do with objects and classes — that is, with traditional
-object-oriented programming.
-
-In particular, if you express your code as classes, it is tempting to reuse
-behavior from another class by extending it (inheritance). However, this
-makes it somewhat difficult to adjust the behavior later. For example, you
-may want to similarly reuse behavior from another class, but you can’t
-extend more than one base class.
-
-Sometimes, people say that inheritance “locks you into” your first design
-because the cost of changing the class hierarchy later is too high. When
-people suggest composition is an alternative to inheritance, they mean that
-instead of extending a class, you can keep an instance of that class as a field.
-Then you can “delegate” to that instance when necessary, but you are also free
-to do something different.
-
-Function composition is a powerful concept, but it raises the level of abstraction
-and makes your code less direct. If you write your code in a style that composes
-functions in some way before calling them, and there are other humans on your team,
-make sure that you’re getting concrete benefits from this approach. It is not “cleaner”
-or “better”, and there is a price to pay for “beautiful” but indirect code.
-
-[composition article](https://whatthefuck.is/composition)
+Composition builds larger behavior by combining smaller pieces. In function composition, each step receives a value, transforms it, and passes it to the next step. The trade-off is indirection: composition is useful only when the shared shape makes the code easier to change or test.
 
 ```js filename="composition" copy
 const dateFunc = () => new Date();
@@ -64,7 +38,9 @@ const showDateLabel = pipe(dateFunc, textFunc, labelFunc, showLabelFunc);
 showDateLabel(); // Today Sat Sep 28 2024
 ```
 
-## inheritance
+## Inheritance
+
+Inheritance reuses behavior through a parent/child relationship. The child class can call parent behavior with `super` and override pieces that need to change. This is direct and familiar, but class hierarchies can become hard to reshape when requirements change.
 
 ```typescript filename="inheritance" copy
 // Base class
@@ -88,12 +64,7 @@ class Vehicle {
 class Car extends Vehicle {
   private readonly _doors: number;
 
-  constructor(
-    make: string,
-    model: string,
-    year: number,
-    doors: number,
-  ) {
+  constructor(make: string, model: string, year: number, doors: number) {
     super(make, model, year); // Call the constructor of the base class
     this._doors = doors;
   }
@@ -112,23 +83,22 @@ console.log(car.displayInfo()); // 2022 Honda Civic - 4 doors
 
 ## Function Stack
 
-The **call stack** is a critical concept in JavaScript that keeps track of function calls. When a function is called,
-it is "pushed" onto the stack. Once the function finishes execution, it is "popped" off the stack. This stack-based approach
-is essential for understanding recursion and function execution order in JavaScript.
+The **call stack** tracks active function calls. When a function starts, it is pushed onto the stack. When it returns, it is popped off. Recursion is easier to understand when you separate the forward phase from the unwind phase.
 
 In the **forward phase**, the function calls accumulate as the recursion continues, with each new function invocation pushing
 itself onto the stack. In the **backward phase**, as functions start to return, they unwind and are popped from the stack, completing their execution.
 
-This behavior is demonstrated in the following example, where `foo` is called recursively until it hits the base case,
-then the stack is unwound as each function completes.
+In this example, `foo` calls itself until it reaches the base case. Then each pending call resumes and finishes in reverse order.
 
-### Forward Phase (Pushing):
+### Forward Phase
+
 1. Call `foo(2)` -> Stack: `[foo(2)]`.
 2. Call `foo(1)` -> Stack: `[foo(2), foo(1)]`.
 3. Call `foo(0)` -> Stack: `[foo(2), foo(1), foo(0)]`.
 4. Call `foo(-1)` -> Stack: `[foo(2), foo(1), foo(0), foo(-1)]`.
 
-### Backward Phase (Unwinding):
+### Backward Phase
+
 1. Return from `foo(-1)` -> Stack: `[foo(2), foo(1), foo(0)]`.
 2. Complete `foo(0)` -> Stack: `[foo(2), foo(1)]`.
 3. Complete `foo(1)` -> Stack: `[foo(2)]`.

@@ -1,20 +1,19 @@
 ---
-title: JavaScript Memoization, Mixins, Promises, and Proxies
-description: Learn JavaScript performance and architecture patterns including memoization, mixins, promise chaining, error handling, proxy traps, and custom iterators.
+title: JavaScript Memoization, Proxies, and Mixins
+description: Learn JavaScript memoization, mixins, promise chaining, error handling, Proxy behavior, iterators, and closure patterns.
 sidebarTitle: Advanced Patterns
 ---
 
 # JavaScript Memoization, Mixins, Promises, and Proxies
 
-Optimize performance and structure code effectively with advanced JavaScript patterns including `memoize`, `mixin`, `Proxy`, custom iterators,
-and asynchronous promise handling.
+These patterns are useful when ordinary function calls are not enough: cache repeated work, compose shared behavior, intercept object access, build custom iteration, and reason about promise chains.
 
 ## Memoize
 
 Memoization is an optimization technique that caches the result of function calls based on their input arguments.
 If the same inputs occur again, the cached result is returned instead of recalculating.
 
-This example wraps a basic function (`adder`) with a `memoize` utility using a `Map` and `JSON.stringify` to store and retrieve results by argument key.
+The wrapper stores results in a `Map`. `JSON.stringify(args)` is used as a simple cache key, which works for small JSON-compatible arguments but is not a universal keying strategy.
 
 ```js filename="memoize" copy
 function memoize(fn) {
@@ -48,11 +47,7 @@ console.log(result2); // 7
 
 ## Mixins
 
-Mixins allow objects to share reusable behavior without using classical inheritance.
-In this example, the `CanSpeak` and `CanWalk` mixins are applied to different classes using
-`Object.assign`, enabling both `Person` and `Robot` to share functionality like `speak` and `walk`.
-
-[mixins](https://javascript.info/mixins)
+Mixins let classes share behavior without forcing them into the same inheritance chain. Here, `Object.assign()` copies `speak` and `walk` methods onto different prototypes.
 
 ```js filename="mixins" copy
 // Define a mixin for shared behavior
@@ -81,11 +76,11 @@ class Person {
 Object.assign(Person.prototype, CanSpeak, CanWalk);
 
 // Create an instance of the class
-const john = new Person('John', 'Hello, world!');
+const john = new Person("John", "Hello, world!");
 
 // Use methods from mixins
 john.speak(); // Output: John says: Hello, world!
-john.walk();  // Output: John is walking.
+john.walk(); // Output: John is walking.
 
 // Another example with a different class
 class Robot {
@@ -98,18 +93,14 @@ class Robot {
 // Apply mixins to the Robot class
 Object.assign(Robot.prototype, CanSpeak, CanWalk);
 
-const r2d2 = new Robot('R2D2', 'Beep boop');
+const r2d2 = new Robot("R2D2", "Beep boop");
 r2d2.speak(); // Output: R2D2 says: Beep boop
-r2d2.walk();  // Output: R2D2 is walking.
+r2d2.walk(); // Output: R2D2 is walking.
 ```
 
 ## Promise Chaining
 
-[promise-chaining](https://javascript.info/promise-chaining)
-
-This example demonstrates how to chain Promises to perform sequential asynchronous operations.
-Each `.then()` receives the result of the previous one, allowing for clean, readable logic
-with predictable timing — in this case, doubling a number step by step with 1-second delays.
+Each `.then()` receives the value returned by the previous step. Returning a promise from a handler pauses the chain until that promise resolves, which is what makes the delayed doubling sequence run in order.
 
 ```js filename="promise chaining" copy
 new Promise(function (resolve, reject) {
@@ -137,12 +128,7 @@ new Promise(function (resolve, reject) {
 
 ## Promise Error Handling
 
-These examples show how to handle errors in promise chains using `.catch()`.
-They demonstrate how synchronous errors thrown during the executor function are
-automatically caught, while asynchronous errors (e.g., in `setTimeout`)
-are **not** — unless they're wrapped in a `try...catch` or returned from a rejected promise.
-
-Understanding where and when errors can be caught is key to building reliable async flows.
+Promise chains catch errors that are thrown synchronously inside the chain. Errors thrown later from a timer are outside that chain unless you convert them into a rejection.
 
 ```js filename="rethrow error" copy
 new Promise((resolve, reject) => {
@@ -195,9 +181,7 @@ new Promise(function (resolve, reject) {
 
 ## Proxy
 
-This example uses a `Proxy` to intercept property access on an object.
-When a key is found in the `dictionary`, the translation is returned; otherwise, the original key is returned as a fallback.
-Proxies are powerful for defining custom behavior for fundamental operations like `get`, `set`, and more.
+A `Proxy` can intercept fundamental object operations. Here it intercepts property reads: known phrases return translations, and unknown phrases fall back to the original key.
 
 ```js filename="Proxy" copy
 let dictionary = {
@@ -224,54 +208,9 @@ console.log(dictionary["Hello"]); // Hola
 console.log(dictionary["Welcome to Proxy"]); // Welcome to Proxy
 ```
 
-## Range Iterator
-
-This example demonstrates how to create a custom iterator using the iterator protocol.
-The `makeRangeIterator` function generates numbers from `start` to `end` with a defined `step`, manually implementing the `next()` method.
-It’s useful for creating lazy sequences or custom iteration logic without relying on generators.
-
-```js filename="range itarator" copy
-function makeRangeIterator(start = 0, end = Infinity, step = 1) {
-  let nextIndex = start;
-  let iterationCount = 0;
-
-  return {
-    next() {
-      let result;
-
-      if (nextIndex < end) {
-        result = { value: nextIndex, done: false };
-        nextIndex += step;
-        iterationCount++;
-
-        return result;
-      }
-
-      return { value: iterationCount, done: true };
-    },
-  };
-}
-
-const iter = makeRangeIterator(1, 6, 2);
-
-let result = iter.next();
-while (!result.done) {
-  console.log(result.value); // 1 3 5
-  result = iter.next();
-}
-
-console.log("Iterated over sequence of size:", result.value);
-// 1, 3, 5
-// Iterated over sequence of size: 3
-```
-
 ## Shooters: Closures & Lexical Scope
 
-Every function is meant to output its number. All `shooter` functions are created in the lexical
-environment of `makeArmy()` function. But when `army[5]()` is called, `makeArmy` has already
-finished its job, and the final value of `i` is `10` (`while` stops at `i=10`). As the result,
-all `shooter` functions get the same value from the outer lexical environment and that is,
-the last value, `i=10`. Solution is to save variable `let j = i`
+Each returned function should remember the number it was created with. If every function closes over the same changing variable, they all read the final value. The fix is to create a new block-scoped value (`j`) for each iteration and close over that value instead.
 
 ```js filename="lexical environment(scope)" copy
 function makeArmy() {
@@ -298,4 +237,3 @@ console.log(army[0]()); // 0
 console.log(army[1]()); // 1
 console.log(army[5]()); // 5
 ```
-

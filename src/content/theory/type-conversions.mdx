@@ -1,19 +1,18 @@
 ---
-title: JavaScript Type Conversions – Dive Deep
-description: Understand how JavaScript handles type coercion in arithmetic, comparisons, and equality checks. Explore examples with null, undefined, strings, and booleans.
+title: JavaScript Type Conversion and Coercion
+description: Learn JavaScript type coercion with plus, minus, comparisons, equality, null, undefined, strings, booleans, and tricky conversion examples.
 sidebarTitle: Type Conversions
 ---
 
 # JavaScript Type Conversions and Coercion Rules
 
-JavaScript automatically converts values between types in many situations — a behavior known as **type coercion**. This guide helps you master how operators
-like `+`, `-`, comparisons (`<`, `>`, `==`, `===`), and more behave when mixing strings, numbers, booleans, `null`, and `undefined`.
+JavaScript converts values automatically in many operators. The confusing part is that not every operator converts the same way. Use these snippets to learn the rules by output, not by memorizing a table.
 
-[Operator precedence](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_precedence)
+For mixed expressions, also keep [operator precedence](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_precedence) in mind.
 
-## plus
+## Plus
 
-Concatenates strings
+`+` performs string concatenation if either side becomes a string. Otherwise it performs numeric addition.
 
 ```js filename="plus" copy
 const log = (value) => console.log(value);
@@ -35,9 +34,9 @@ log(1 + "s"); // "1s"
 log(1 + "1"); // "11"
 ```
 
-## minus
+## Minus
 
-Behaves like other operators, converts to numbers
+`-` is numeric only, so both sides are converted to numbers.
 
 ```js filename="minus" copy
 const log = (value) => console.log(value);
@@ -59,9 +58,9 @@ log(1 - "s"); // NaN
 log(1 - "1"); // 0
 ```
 
-## comparisons
+## Comparisons
 
-When comparing values of different types, they convert to numbers
+Relational comparisons usually convert mixed types to numbers, except string-to-string comparisons, which compare lexicographically.
 
 ```js filename="comparisons" copy
 const log = (value) => console.log(value);
@@ -92,9 +91,9 @@ log("break");
 log("0" >= 0); // true
 ```
 
-## equality
+## Equality
 
-Strict equality === doesn't convert values
+Strict equality (`===`) does not coerce values. Loose equality (`==`) does, which is why examples with `null`, `undefined`, `false`, `0`, and `""` need extra care.
 
 ```js filename="== and ===" copy
 const log = (value) => console.log(value);
@@ -118,7 +117,7 @@ log(undefined === null); // false
 log([] === []); // false
 ```
 
-## random conversions
+## Mixed Conversions
 
 ```js filename="random conversions" copy
 const log = (value) => console.log(value);

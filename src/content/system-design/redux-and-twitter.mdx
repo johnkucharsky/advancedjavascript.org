@@ -1,20 +1,18 @@
 ---
-title: Redux and Twitter Architecture Patterns in Vanilla JavaScript
-description: Redux architecture pattern, dispatch and action. Twitter feed system design, follow, unfollow, get news feed.
+title: Redux Store and Twitter Feed in JavaScript
+description: Build a vanilla JavaScript Redux store and Twitter-style feed with dispatch, actions, follow, unfollow, and news feed logic.
 sidebarTitle: Redux and Twitter
 ---
 
 # Redux and Twitter Architecture Patterns in Vanilla JavaScript
 
-Explore two powerful patterns implemented from scratch in plain JavaScript: a Redux-like state management system and a Twitter-inspired social feed engine.
-These examples give you a deeper understanding of real-world app architecture—without relying on any libraries or frameworks.
+Two small systems make the architecture ideas concrete: a reducer-driven store and a feed model with follows, tweets, and ranking by recency. The point is not to clone a framework. It is to see the state shape, the operations, and the invariants clearly.
 
 ## Redux Pattern Implementation
 
-An implementation of the **Redux pattern** using vanilla JavaScript. This custom `Store` class manages state using a reducer and
-supports dispatching actions and subscribing to state changes.
+The store keeps state private, exposes `getState()`, and changes state only through `dispatch(action)`. A reducer receives the previous state and an action, then returns the next state. Subscribers are notified after each dispatch.
 
-Redux is commonly used for predictable state management in frontend applications like React.
+This is the useful part of the Redux mental model: state transitions are explicit, predictable, and easy to test.
 
 ```js filename="redux pattern" copy
 class Store {
@@ -81,16 +79,16 @@ unsubscribe();
 
 ## Twitter Feed Simulation
 
-A simplified simulation of Twitter's core features using JavaScript classes.
-Implements functionality for posting tweets, following/unfollowing users, and generating personalized news feed.
+A small feed system needs three pieces of state: who follows whom, which tweets belong to each user, and a timestamp so the feed can be sorted by recency.
 
 Key features:
-- `postTweet(userId, tweetId)` – Posts a tweet for a user.
-- `follow(followerId, followeeId)` – Allows one user to follow another.
-- `unfollow(followerId, followeeId)` – Allows a user to unfollow someone (except themselves).
-- `getNewsFeed(userId)` – Returns the 10 most recent tweets from the user and users they follow.
 
-Demonstrates how to work with `Map`, `Set`, arrays, and sorting for feed generation.
+- `postTweet(userId, tweetId)` stores a tweet for a user.
+- `follow(followerId, followeeId)` records a following relationship.
+- `unfollow(followerId, followeeId)` removes a relationship, except self-follow.
+- `getNewsFeed(userId)` returns the most recent tweets from the user and the users they follow.
+
+The implementation uses `Map` for keyed collections, `Set` for unique followees, and sorting for the final feed order.
 
 ```js filename="twitter" copy
 class Twitter {
@@ -139,7 +137,7 @@ class Twitter {
   }
 
   unfollow(followerId, followeeId) {
-      // Cannot unfollow oneself
+    // Cannot unfollow oneself
     if (followerId === followeeId) return;
     if (this.follows.has(followerId)) {
       this.follows.get(followerId).delete(followeeId);

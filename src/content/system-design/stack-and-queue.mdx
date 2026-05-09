@@ -1,18 +1,16 @@
 ---
-title: Queue and Stack Patterns in JavaScript
-description: Queue and Stack data structures in JavaScript. Synchronous and asynchronous queues, stack-based palindrome checking.
+title: JavaScript Queue and Stack Patterns
+description: Learn queue, stack, async queue, and stack-based palindrome examples in JavaScript for interviews and data structures.
 sidebarTitle: Queue and Stack
 ---
 
 # Queue and Stack Patterns in JavaScript
 
-Queue and stack data structures with real JavaScript implementations. This page includes examples of synchronous and asynchronous queues, stack,
-stack-based palindrome checking.
+Queues and stacks are small abstractions, but they show up everywhere: schedulers, breadth-first search, undo history, parsers, and async workflows. The examples stay plain so the ordering rule is visible in each implementation.
 
 ## AsyncQueue: Processing Promises Sequentially
 
-An `AsyncQueue` class that processes asynchronous tasks in sequence. Each task is a function returning a
-Promise, and tasks are executed one after another in the order they were added.
+`AsyncQueue` stores functions, not already-running promises. That distinction matters: each task starts only after the previous task has resolved, so the result order follows the queue order even when later tasks would finish faster on their own.
 
 ```js filename="async queue" copy
 class AsyncQueue {
@@ -59,9 +57,7 @@ queue.process().then((results) => console.log(results));
 
 ## Queue Implementation: First-In, First-Out (FIFO)
 
-A simple `Queue` class that follows the **FIFO (First In, First Out)** principle. Elements are added to the end and removed from the front.
-
-Commonly used in scheduling, task queues, and breadth-first search algorithms.
+A queue follows **FIFO**: first in, first out. New values are added to the back, and `dequeue()` removes from the front. This is the same ordering used by task queues and breadth-first search.
 
 ```js filename="queue" copy
 class Queue {
@@ -99,11 +95,9 @@ queue.size; // 3
 queue.isEmpty(); // false
 ```
 
-
 ## Using a Stack to Check for Palindromes
 
-This function uses a **stack** to check if a given word is a palindrome. It pushes each character onto the stack, then pops
-them in reverse order to compare with the original string.
+A stack reverses order because the last value pushed is the first one popped. The palindrome check uses that property to rebuild the word backward and compare it with the original.
 
 ```js filename="stack palindrome" copy
 function isPalindrome(word) {
@@ -129,10 +123,10 @@ console.log(isPalindrome("cheatsheet")); // false
 
 ## Stack Implementation: Last-In, First-Out (LIFO)
 
-A basic `Stack` class implementation that follows **LIFO (Last In, First Out)** behavior.
-Includes common methods such as `push`, `pop`, `peek`, and `size`.
+A stack follows **LIFO**: last in, first out. `push()` adds to the top, `pop()` removes from the top, and `peek()` reads the current top without removing it.
 
 Useful for:
+
 - Undo functionality
 - Recursion
 - Reversing data

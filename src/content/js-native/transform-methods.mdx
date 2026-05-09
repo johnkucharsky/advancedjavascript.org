@@ -1,23 +1,20 @@
 ---
-title: JavaScript Array Non-Mutating Methods
-description: Learn how to transform, filter, flatten, and reshape arrays in JavaScript with methods like map, filter, flat, flatMap, join, reduce, and slice.
+title: JavaScript Array Transform Method Polyfills
+description: Recreate map, filter, flat, flatMap, join, reduce, and slice to understand JavaScript array transformation methods.
 sidebarTitle: Transform Methods
 ---
 
 # JavaScript Array Non-Mutating Methods
 
-This section explores essential JavaScript array methods used for transforming, reshaping, and extracting data — including `map()`, `filter()`, `reduce()`, `flat()`, `flatMap()`, `join()`, and `slice()`.
+Transform methods take an array and produce a new shape: a smaller array, a mapped array, a flattened array, a single value, or a copied range. Most of them do not mutate the original input, which is why they are so common in UI and data-processing code.
 
 These are all **non-mutating methods**, meaning they return new arrays or values without changing the original input.
-You'll learn how they work internally with custom polyfills.
 
 ## Array.filter
 
 The [`filter()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
 method creates a **shallow copy** of an array, including only elements that pass the test implemented by the provided callback function.
 It’s ideal for narrowing down data based on conditions, like filtering by length, type, or custom logic.
-
-This example includes a custom implementation of `Array.prototype.filter()` and practical use cases like filtering long words or prime numbers.
 
 ```js filename="filter" copy
 Array.prototype.myFilter = function (callback) {
@@ -59,8 +56,6 @@ The [`flat()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
 method creates a new array with all sub-array elements **recursively flattened** up to the specified depth.
 It's useful for simplifying nested arrays into a single-level array — or flattening deeply nested structures with `Infinity`.
 
-This example provides a custom implementation of `Array.prototype.flat()`, supporting variable depth.
-
 ```js filename="flat" copy
 Array.prototype.customFlat = function (depth = 1) {
   const result = [];
@@ -93,8 +88,6 @@ console.log(arr.customFlat(Infinity));
 The [`flatMap()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap)
 method first maps each element using a given callback function, then **flattens the result by one level**.
 It behaves like `array.map(...).flat()`, but is more efficient and expressive for nested transformations.
-
-This example demonstrates both native usage and a custom implementation of `Array.prototype.flatMap()` using a real-world data structure.
 
 ```js filename="flatMap" copy
 Array.prototype.customFlatMap = function (callback, thisArg) {
@@ -176,8 +169,6 @@ The [`join()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
 method creates and returns a **string** by concatenating all elements of an array, separated by a specified string (default is a comma).
 If the array has only one item, that item is returned as-is. It’s useful for formatting output or combining array values into CSV-like strings.
 
-This example includes a custom implementation of `Array.prototype.join()` that replicates the native behavior.
-
 ```js filename="join" copy
 Array.prototype.customJoin = function (separator = ",") {
   let result = "";
@@ -212,9 +203,6 @@ console.log(matrix.customJoin(";")); // 1,2,3;4,5,6;7,8,9
 The [`map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
 method creates a **new array** populated with the results of calling a provided function on every element in the original array.
 It's a key tool for transforming data structures in a clean, functional style — especially for UI rendering, data formatting, or calculations.
-
-This example includes a custom implementation of `Array.prototype.map()` along with common use cases like doubling values,
-reformatting objects, and calculating cumulative sums.
 
 ```js filename="map" copy
 Array.prototype.customMap = function (callbackFn) {
@@ -262,11 +250,7 @@ The [`reduce()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referen
 method executes a user-defined "reducer" callback function on each element of the array, in order.
 It accumulates a **single value** by applying the callback function and passing the result from one iteration to the next.
 
-The method can accept an **optional initial value**, and if not provided, it defaults to the first element in the array.
-This custom implementation mimics the native behavior.
-
-This example demonstrates usage of `reduce` for both synchronous and asynchronous operations, including practical examples
-like summing an array and composing a pipeline of functions.
+The method can accept an **optional initial value**. If no initial value is provided, the first array element becomes the accumulator and iteration starts at the second element.
 
 ```js filename="reduce" copy
 Array.prototype.customReduce = function (callback, initialValue) {

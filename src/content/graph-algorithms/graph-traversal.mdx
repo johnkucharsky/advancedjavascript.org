@@ -1,14 +1,12 @@
 ---
-title: Graph Traversal Algorithms in JavaScript
-description: Graphs in JavaScript using Depth-First Search (DFS) and Breadth-First Search (BFS).
+title: JavaScript Graph Traversal with DFS and BFS
+description: Learn DFS and BFS graph traversal in JavaScript with directed and undirected path examples using adjacency lists.
 sidebarTitle: Graph Traversal
 ---
 
 # Graph Traversal Algorithms in JavaScript
 
-Learn how to traverse graphs in JavaScript using Depth-First Search (DFS) and Breadth-First Search (BFS).
-These examples show how to implement both directed and undirected graph traversal using adjacency lists and recursive or iterative logic.
-Ideal for interview prep and understanding graph algorithms from the ground up.
+Graph traversal is the base pattern behind dependency checks, route search, tree-like UI data, and many interview tasks. Adjacency lists make the connection between input data and traversal logic explicit.
 
 ## Has Path in Directed Graphs (DFS & BFS)
 
@@ -21,11 +19,7 @@ The graph is represented as an **adjacency list**.
 type Graph = Record<string, string[]>;
 
 // Depth-First Search
-const hasPath = (
-  graph: Graph,
-  src: string,
-  dst: string,
-): boolean => {
+const hasPath = (graph: Graph, src: string, dst: string): boolean => {
   if (src === dst) return true;
 
   for (const neighbor of graph[src]) {

@@ -1,22 +1,23 @@
 ---
-title: JavaScript Set, Object.assign and groupBy, and Array.entries
-description: Learn how Set, Object.assign and groupBy, and Array.entries work in JavaScript. Includes custom implementations and examples.
+title: JavaScript Set and Object Utility Methods
+description: Learn JavaScript Set behavior, Object.groupBy, Object.assign, and Array.entries with practical examples.
 sidebarTitle: Set and Object
 ---
 
 # JavaScript Set, Object.assign and groupBy, and Array.entries
 
-JavaScript utilities `Set`, `Object.groupBy()`, `Object.assign()`, and `Array.prototype.entries()`.
-These examples show how to work with unique collections, group items by category, clone or merge objects, and iterate over arrays with
-index-value pairs — all with hands-on explanations and custom implementations for deeper insight.
+These utilities solve common collection problems: remove duplicates with `Set`, group rows by a derived key, merge objects with `Object.assign()`, and iterate arrays as `[index, value]` pairs. The examples focus on the behavior that is easy to misremember: uniqueness, insertion order, shallow copies, and iterator output.
+
+## Interview Practice Flow
+
+For each snippet, state whether the operation preserves insertion order, mutates the target, or returns a new value. The useful edge cases are duplicate primitive values, object references that look equal but are different objects, shallow object merges, grouped keys, and iterator output from `entries()`.
 
 ## Set
 
 The [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) object lets you store **unique values of any type**, whether primitive or object references.
 A `Set` automatically removes duplicate elements and maintains the **insertion order**.
 
-This example demonstrates how to create a set, add/remove elements, check membership,
-iterate through a set, and perform common set operations like union, intersection, and difference.
+The example creates a set, checks membership, removes values, iterates in insertion order, and implements union, intersection, and difference.
 
 ```js filename="Set" copy
 // Create a Set
@@ -94,7 +95,7 @@ The [`Object.groupBy()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript
 static method groups elements of an iterable based on the **string key** returned by a callback function.
 It returns a plain object with keys representing group names and values as arrays of grouped items.
 
-This example shows a manual implementation using `Array.prototype.reduce()` to group inventory items by their `type` field.
+The manual implementation uses `reduce()` to group inventory items by their `type` field.
 
 ```js filename="Object.groupBy" copy
 const groupBy = (arr, callback) => {
@@ -136,7 +137,7 @@ The [`Object.assign()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/
 method copies all **enumerable own properties** from one or more source objects to a target object.
 It returns the **modified target**, making it useful for shallow cloning or merging multiple objects.
 
-This example also shows how `Object.assign()` behaves similarly to the spread operator (`...`) when cloning simple objects.
+The example also shows where `Object.assign()` behaves like object spread for simple shallow clones.
 
 ```js filename="Object.assign" copy
 const obj = {
@@ -159,9 +160,7 @@ const objClone2 = Object.assign({}, obj); // { foo: 1, bar: 2 }
 
 The [`entries()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/entries)
 method returns a new array iterator object containing `[index, value]` pairs for each element.
-It’s commonly used in `for...of` loops to iterate with both index and value.
-
-This example recreates `Array.prototype.entries()` using a generator to yield key/value pairs.
+It works well in `for...of` loops when both index and value are needed.
 
 ```js filename="entries" copy
 Array.prototype.customEntries = function () {
@@ -196,5 +195,3 @@ for (const [index, element] of arr.customEntries()) {
 // 1 b
 // 2 [ 'c' ]
 ```
-
-

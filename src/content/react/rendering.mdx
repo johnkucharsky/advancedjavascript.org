@@ -1,23 +1,20 @@
 ---
-title: React Concepts – usePrevious and children
-description: Learn about usePrevious custom hook, React children behavior, and how React reuses component instances for performance optimization.
+title: React usePrevious and children Rendering
+description: Learn the React usePrevious hook, children rendering behavior, and why React can reuse component instances.
 sidebarTitle: React Rendering
 ---
 
 # React Concepts: `usePrevious` and `children`
 
-This guide explores useful React patterns including the `usePrevious` hook for tracking prior state values, and how React handles JSX `children` and
-component reuse — all with minimal, focused examples using TypeScript.
+Two examples are about render timing. `usePrevious` stores the last committed value, while the `children` example shows when a child element can be reused instead of rerendered.
+
+## Interview Practice Flow
+
+Before running each example, predict which component logs during the initial render and which logs after an update. Then explain whether the value lives in state, a ref, an effect, or a stable React element. The main edge cases are Strict Mode double effects, stale previous values, and assuming that a parent update always rerenders every child.
 
 ## usePrevious
 
-The `usePrevious` custom hook allows you to track the previous value of a state variable in React.
-This hook leverages the `useRef` hook to store the previous value of a given state, and `useEffect`
-to update the ref value after the component has rendered. This approach makes it possible to access the
-value before the current one, which is useful for cases where you need to compare the previous and current values of a variable.
-
-In this example, the `usePrevious` hook tracks the previous count state value. The value of the `ref` is
-updated inside the `useEffect`, which runs after the component has rendered. The previous value is stored in the ref and is returned by the hook.
+`usePrevious` keeps a value in a ref and updates that ref after render. During the next render, the ref still contains the previous committed value, so the component can compare previous and current state without triggering another render.
 
 ```tsx filename="usePrevious" copy
 import { useState, useEffect, useRef } from "react";
@@ -71,13 +68,7 @@ export default App;
 
 ## children
 
-The [`children`](https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children) concept in React
-refers to any child components or elements passed into a parent component. In this example, the `TestComponent`
-is rendered by the `TestWrapper` component, but React does not rerender `TestComponent` after clicking the button
-because the props have not changed. React reuses the same component instance as long as its props remain unchanged.
-
-This custom implementation demonstrates how React optimizes rendering by not rerendering `TestComponent` unless the
-props passed to it change, despite the state change in the parent component (`TestWrapper`).
+`children` are values passed into a component. In this example, `TestComponent` is created before `TestWrapper` updates its own state. When `TestWrapper` rerenders, React can reuse the same child element because the `prop` value did not change.
 
 ```tsx filename="children" copy
 import { ReactElement, useState } from "react";

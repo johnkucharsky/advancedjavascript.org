@@ -1,30 +1,25 @@
 ---
-title: JavaScript Most Commonly Used Utils
-description: JavaScript utility patterns like clsx, deepClone, retry, topological sort, filter by related property, reducer pattern, and more.
+title: Common JavaScript Utility Functions
+description: Learn practical JavaScript utilities like clsx, deepClone, retry, topological sort, filterMap, innerJoin, and reducer patterns.
 sidebarTitle: Various Utilities
 ---
 
-# JavaScript Most Commonly Used Utils
+# Common JavaScript Utility Patterns
 
-This catalog includes some of the **most commonly used utility functions and logic patterns** in JavaScript.
-They’re designed to simplify development, reduce bugs, and promote cleaner, more maintainable code.
-
-You'll find utilities like `clsx`, `deepClone`, retry logic, filtering by related properties, topological sort,
-and reducer patterns — all of which are frequently used in real-world frontend projects and technical interviews.
+The utilities are grouped by the problem they solve: class-name composition, cloning, joining related data, retrying async work, reducer-style updates, shuffling, and dependency ordering. Treat them as patterns you can adapt, not as functions to copy blindly.
 
 ## clsx
 
-The `clsx` utility is commonly used to conditionally join class names in JavaScript and React projects.
+`clsx` builds a class-name string from mixed inputs. It is useful when UI state decides which classes should be present.
 
-This custom implementation mimics the behavior of the [`clsx`](https://github.com/lukeed/clsx) library by:
+This custom implementation follows the core behavior of the [`clsx`](https://github.com/lukeed/clsx) library:
 
 - Skipping falsy values (`false`, `null`, `undefined`, `0`, `""`, `NaN`)
 - Joining strings as-is
 - Recursively flattening arrays
 - Including keys from objects whose values are truthy
 
-This allows for clean, readable class name composition in UI code.
-
+The result is a single space-separated string that can be passed to `className`.
 
 ```js filename="clsx" copy
 function clsx(...args) {
@@ -61,13 +56,9 @@ console.log(
 ); // bar one
 ```
 
-## contains duplicate
+## Contains Duplicate
 
-This function checks if a given array contains any duplicate values.
-
-It uses a `Set` to track elements that have already been seen while iterating through the array.
-If a value is found in the `Set`, the function returns `true`, indicating a duplicate.
-If no duplicates are found by the end of iteration, it returns `false`.
+This function checks whether an array contains a repeated value. A `Set` tracks values that have already appeared. As soon as a value is found twice, the function returns `true`; otherwise it returns `false` after the loop.
 
 ```js filename="containsDuplicate" copy
 function containsDuplicate(nums) {
@@ -88,18 +79,18 @@ console.log(containsDuplicate([1, 1, 3, 4])); // true
 console.log(containsDuplicate([1, 3, 4])); // false
 ```
 
-## deep clone
+## Deep Clone
 
 The `deepClone` function recursively copies all levels of an object or array, creating a fully independent clone.
-This avoids shared references and ensures that changes to nested structures in the cloned object won’t affect the original.
+This avoids shared references, so changing a nested value in the clone does not affect the original JSON-compatible object.
 
 It handles:
+
 - Primitive types and `null`
 - Arrays using recursive `map`
 - Plain objects using recursive property traversal
 
-Perfect for deep copying JSON-compatible data without using `JSON.parse(JSON.stringify(...))`,
-which fails on special types like `Date`, `Map`, `Set`, or circular references.
+This version is meant for JSON-compatible data. It does not handle special object types like `Date`, `Map`, `Set`, or circular references.
 
 ```js filename="deepClone" copy
 function deepClone(obj) {
@@ -114,7 +105,7 @@ function deepClone(obj) {
 
   const clonedObj = {};
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       // Recursively clone object properties
       clonedObj[key] = deepClone(obj[key]);
     }
@@ -128,13 +119,14 @@ const clonedObj = deepClone(obj);
 console.log(clonedObj); // { a: 1, b: [ { c: 2, d: 3 } ] }
 ```
 
-## filter by related property
+## Filter by Related Property
 
-This utility filters a list of objects based on a **related property** found in another array — similar to a **join + filter** operation.
+This utility filters a list by looking up related data from another list. It is the array equivalent of joining tables and then filtering by a field from the joined record.
 
-In this example, we filter items in the `objects` array based on the `class` value of their related `object_type`, which is matched against the `object_types` array.
+In this example, `objects` are filtered by the `class` of their related `object_type`.
 
 Highlights:
+
 - `groupBy()` helps group `object_types` by `class` for fast lookup.
 - `filterObjectsByClass()` efficiently filters items by matching related object type's class.
 - Uses TypeScript generics for reusability and type safety.
@@ -177,14 +169,11 @@ const filterObjectsByClass = <T>(
 ): T[] => {
   const result: T[] = [];
 
-  const objTypesByClass = groupBy(
-    objectTypes,
-    (item) => item.class,
-  );
+  const objTypesByClass = groupBy(objectTypes, (item) => item.class);
 
   for (const item of objects) {
     if (
-      objTypesByClass[cls].find(
+      objTypesByClass[cls]?.find(
         (objectType) => objectType.id === item.object_type,
       )
     ) {
@@ -195,11 +184,7 @@ const filterObjectsByClass = <T>(
   return result;
 };
 
-const filteredObjects = filterObjectsByClass(
-  "orange",
-  objects,
-  object_types,
-);
+const filteredObjects = filterObjectsByClass("orange", objects, object_types);
 console.log(filteredObjects);
 
 // [
@@ -211,9 +196,10 @@ console.log(filteredObjects);
 
 ## filterMap
 
-The `filterMap()` utility combines filtering and mapping into a single `reduce()` pass — making it more efficient than chaining `.filter().map()`.
+`filterMap()` combines filtering and mapping in one `reduce()` pass. Use it when each kept item should also be transformed.
 
 This function takes:
+
 - an `array`,
 - a `filterBoolean` function to determine which elements to include,
 - and a `mapCallback` to transform each included item.
@@ -245,11 +231,10 @@ console.log(activeNames); // ['Alice', 'Charlie']
 
 ## innerJoin
 
-Implements a basic [`innerJoin`](https://ramdajs.com/docs/#innerJoin) function for
-arrays — similar to SQL inner joins. This method takes a `predicate`, a list of `records`, and a list of `ids`.
-It returns all records where the predicate returns true for at least one ID.
+This is a small [`innerJoin`](https://ramdajs.com/docs/#innerJoin) for arrays. It keeps records that match at least one value from another list according to a predicate.
 
 This approach is helpful for:
+
 - Matching entities across two datasets
 - Resolving references between relational data
 - Filtering records based on foreign key relations
@@ -277,13 +262,9 @@ console.log(result);
 // [{id: 456, name: 'Stephen Stills'}, {id: 177, name: 'Neil Young'}]
 ```
 
-## Reducer pattern with actions
+## Reducer Pattern with Actions
 
-This example demonstrates the use of a reducer function similar to the pattern used in React’s `useReducer`.
-The reducer function handles different types of actions (`added`, `changed`, `deleted`) to manage a list of tasks.
-It accumulates state changes over time as actions are applied via
-[`Array.prototype.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce),
-making it a powerful pattern for predictable state updates in complex logic flows.
+This reducer handles task actions (`added`, `changed`, `deleted`) and returns the next task list for each action. Applying a list of actions with [`Array.prototype.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) makes the state transition history explicit.
 
 ```js filename="reducer" copy
 function tasksReducer(tasks, action) {
@@ -333,12 +314,9 @@ console.log(finalState);
 // ]
 ```
 
-## Retry with exponential backoff
+## Retry with fixed delay
 
-This snippet demonstrates how to implement a retry mechanism when fetching data from an API.
-It attempts to fetch the resource multiple times (up to a given `retries` limit) and waits a specified `delay` between each retry.
-If the request ultimately fails, it throws an error. This is particularly useful for handling flaky network requests
-or ensuring robustness when dealing with unstable APIs.
+This helper retries a failing request with a fixed delay between attempts. If every attempt fails, it throws the final error path explicitly instead of silently returning an invalid value.
 
 ```js filename="fetchWithRetry" copy
 async function fetchWithRetry(url, retries, delay = 1000) {
@@ -367,8 +345,7 @@ console.log(res);
 
 ## Shuffle (Fisher-Yates Algorithm)
 
-This example implements the [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher–Yates_shuffle),
-a reliable way to randomly shuffle elements in an array.
+This is the [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher–Yates_shuffle), a reliable way to randomize an array in place.
 The algorithm works by iterating the array from the end to the beginning,
 swapping the current element with a randomly selected one from earlier in the array (or itself).
 It ensures a uniform distribution of permutations.
@@ -384,14 +361,12 @@ function shuffle(array) {
 
 const shuffledArray = [1, 2, 3, 4, 5];
 shuffle(shuffledArray);
-console.log(shuffledArray); // [ 2, 1, 4, 5, 3 ]
+console.log(shuffledArray); // example: [ 2, 1, 4, 5, 3 ]
 ```
 
 ## Topological Sort
 
-This example performs a [topological sort](https://en.wikipedia.org/wiki/Topological_sorting) on a set of items with dependencies.
-Each item can only appear in the result after all of its dependencies are resolved.
-It’s a common algorithm used in build systems, task schedulers, and dependency resolution tools.
+This is a [topological sort](https://en.wikipedia.org/wiki/Topological_sorting) for items with dependencies. Each item can appear in the result only after its dependencies have already been added. If no item can be added during a pass, the dependency graph contains a cycle or a missing dependency.
 
 ```js filename="topological sort" copy
 const cards = [
@@ -412,6 +387,8 @@ const getOrderedCards = (cards) => {
   const added = new Set();
 
   while (result.length < cards.length) {
+    let addedInPass = false;
+
     for (const card of cards) {
       if (
         !added.has(card.id) &&
@@ -419,7 +396,12 @@ const getOrderedCards = (cards) => {
       ) {
         result.push(card.id);
         added.add(card.id);
+        addedInPass = true;
       }
+    }
+
+    if (!addedInPass) {
+      throw new Error("Cannot resolve dependency order");
     }
   }
 

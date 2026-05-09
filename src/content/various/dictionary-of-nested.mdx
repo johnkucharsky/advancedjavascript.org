@@ -1,28 +1,28 @@
 ---
-title: Transform Nested Arrays into Dictionary in JavaScript
-description: Learn how to convert deeply nested array structures into object-based dictionaries for fast access and clean traversal.
+title: Convert Nested Arrays to a JavaScript Dictionary
+description: Convert deeply nested JavaScript arrays into object dictionaries for fast lookup, traversal, and category data access.
 sidebarTitle: Dictionary of Nested
 ---
 
 # Dictionary of Nested Arrays
 
-This example demonstrates how to transform a deeply nested array structure (e.g., categories → subcategories → items) into a dictionary format for **constant-time lookup** by `id`.
+Nested arrays are convenient for rendering, but inefficient when you need direct access by `id`. Turning category data into dictionaries keeps lookup, update, and traversal code from repeatedly scanning every level.
 
 ## Why it matters
 
-When working with large, hierarchical datasets (like tree structures or menu items), repeatedly using `.find()` or `.filter()` on nested arrays
-becomes expensive and messy. By flattening them into a dictionary, you gain:
+When hierarchical data grows, repeated `.find()` or `.filter()` calls become noisy and expensive. A dictionary gives you:
 
-- 🔍 **O(1) access time** to any item by `id`
-- 💡 Easier updates, deletions, or traversal
-- 🧱 A solid foundation for normalized state in frontend apps
+- **O(1) access** to an item by `id`
+- simpler updates, deletions, and traversal
+- a good foundation for normalized frontend state
 
-This guide walks through:
+The progression is:
+
 - A simple nested loop approach using JavaScript
 - A recursive and reusable `mapToDictionary()` helper
-- A strongly typed TypeScript version for enterprise-scale reliability
+- A strongly typed TypeScript version
 
-## 🔢 Plain JavaScript: Nested Loop Approach
+## Plain JavaScript: Nested Loop Approach
 
 ```js filename="dictionary of nested" copy
 const data = [
@@ -103,9 +103,9 @@ console.log(nestedDictionary[8].subcategories[12].items[14]);
 // { id: 14, name: 'Item B2-2', value: 45 }
 ```
 
-## ♻️ Recursive Helper: `mapToDictionary()`
+## Recursive Helper: `mapToDictionary()`
 
-This reusable utility recursively maps any array of nested structures into a flat dictionary by id.
+The recursive version removes the hard-coded category/subcategory levels. Pass the output keys for each level, and the helper builds the same lookup shape from any compatible nested array.
 
 ```js filename="dictionary of nested" copy
 const data = [
@@ -178,9 +178,9 @@ console.log(nestedDictionary[8].subcategories[9].items[11]);
 // { id: 11, name: 'Item B1-2', value: 35, items: undefined }
 ```
 
-## 📄 TypeScript: Fully Typed Nested Dictionary
+## TypeScript: Fully Typed Nested Dictionary
 
-The following code provides strict types and reusable functions to construct the same dictionary using TypeScript.
+The TypeScript version makes the expected structure explicit. This is helpful when the dictionary is passed between components or shared with state-management code.
 
 ```ts filename="dictionary of nested ts" copy
 type Item = {
@@ -227,9 +227,7 @@ function mapItemsToDictionary(items: Item[]) {
   );
 }
 
-function mapSubcategoriesToDictionary(
-  subcategories: Subcategory[],
-) {
+function mapSubcategoriesToDictionary(subcategories: Subcategory[]) {
   return subcategories.reduce((acc, subcategory) => {
     acc[subcategory.id] = {
       name: subcategory.name,
@@ -239,15 +237,11 @@ function mapSubcategoriesToDictionary(
   }, {} as Subcategories);
 }
 
-function createNestedDictionary(
-  categories: Category[],
-): NestedDictionary {
+function createNestedDictionary(categories: Category[]): NestedDictionary {
   return categories.reduce((acc, category) => {
     acc[category.id] = {
       name: category.name,
-      subcategories: mapSubcategoriesToDictionary(
-        category.items,
-      ),
+      subcategories: mapSubcategoriesToDictionary(category.items),
     };
     return acc;
   }, {} as NestedDictionary);
@@ -304,10 +298,6 @@ const nestedDictionary = createNestedDictionary(data);
 
 console.log(nestedDictionary[1].name); // Category A
 console.log(nestedDictionary[1].subcategories[5].name); // Subcategory A2
-console.log(
-  nestedDictionary[1].subcategories[5].items[7].name,
-); // Item A2-2
-console.log(
-  nestedDictionary[8].subcategories[12].items[14].value,
-); // 45
+console.log(nestedDictionary[1].subcategories[5].items[7].name); // Item A2-2
+console.log(nestedDictionary[8].subcategories[12].items[14].value); // 45
 ```

@@ -1,28 +1,30 @@
 ---
-title: Group List by Quarters
-description: Group monthly financial data by calendar quarters using date-fns `getQuarter()`. Useful for dashboards, charting, and reporting.
+title: Group JavaScript Data by Quarter
+description: Group monthly financial data by calendar quarter in JavaScript for dashboards, reports, charting, and tax datasets.
 sidebarTitle: Group List by Quarters
 ---
 
 # Group List by Quarters
 
-Groups monthly financial data by calendar quarters using the [`getQuarter()`](https://date-fns.org/docs/getQuarter) method from
-the [`date-fns`](https://date-fns.org/) library. Each group includes individual monthly entries and an optional cumulative total for the quarter.
+The input starts with monthly report rows and cumulative totals. The transformation groups them by calendar quarter so the result is easier to render in quarterly tables, charts, and report cards.
 
 Useful for:
+
 - Visualizing quarterly reports
 - Aggregating financial or performance data
 - Preparing charting datasets or grouped UI views
 
-## Steps:
-1. `groupDataByQuarter(data)` – Organizes data into a dictionary using keys like `"2023-Q1"` based on the `date` field.
-2. `initializeDates(groupedQuarters)` – Prepares a simplified structure listing quarters and associated month strings.
-3. `initializeRestData(groupedQuarters)` – Flattens the quarterly structure into tax-specific groups, returning an array of metrics (`profit`, `profit_percent`) with their per-quarter values and totals.
+## Steps
 
-This modular approach is helpful when formatting data for analytics dashboards or quarterly reports.
+1. `groupDataByQuarter(data)` organizes report rows into keys like `"2023-Q1"` based on the `date` field.
+2. `initializeDates(groupedQuarters)` prepares a compact list of quarters and month strings.
+3. `initializeRestData(groupedQuarters)` turns grouped data into metric rows such as `profit` and `profit_percent`.
+
+Keeping the steps separate makes the transformation easier to test and easier to adjust for a different report layout.
 
 ```js filename="groupDataByQuarter" copy
-import { getQuarter, parseISO } from "date-fns";
+const getQuarter = (date) => Math.floor(date.getMonth() / 3) + 1;
+const parseISO = (value) => new Date(`${value}T00:00:00`);
 
 // data
 export const TaxEntitiesKeys = {

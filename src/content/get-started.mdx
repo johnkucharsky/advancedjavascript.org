@@ -1,38 +1,32 @@
 ---
-title: Advanced JavaScript Code Examples
-description: Master how JavaScript works under the hood with real-world problems, advanced patterns, and concepts companies actually ask in interviews.
+title: Advanced JavaScript Topic Map
+description: Navigate Advanced JavaScript lessons by topic, including arrays, promises, React, algorithms, language behavior, and utility patterns.
 sidebarTitle: Getting started
 ---
 
-# Advanced JavaScript Code Examples
+# Advanced JavaScript Topic Map
 
-## About Project
+## How to use this map
 
-💡 Leetcode problems can sometimes feel disconnected from real-world development ( with a few valuable exceptions: **graph algorithms** and **system design** ).
+Use this page as the table of contents for the site. Start with the topics you already use at work, then move into the ones that usually break during interviews: async execution, array behavior, `this`, state updates, and data transformation.
 
-What truly matters? Understanding how **JavaScript works under the hood**. If you don't understand JavaScript, Leetcode is just a waste of time —
-you're solving abstract puzzles without knowing essential basics of javascript language. Instead, build your skills with **Advanced JavaScript Patterns**,
-carefully selected code snippets, and concepts that companies *actually* expect in interviews. These snippets may look easy, but these are basics, learn them,
-you'll always need them in you daily job.
+The examples are intentionally small. Read the prompt, predict the result, then compare your reasoning with the implementation. That is closer to how these questions appear in real code reviews and technical interviews than solving isolated puzzles by category.
 
-**Dive in, practice, and be ready for your next job!**
-
-> 📌 This resource complements foundational learning platforms like
+> This resource complements foundational references like
 > [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript), [JavaScript.info](https://javascript.info/), and [react.dev](https://react.dev).
-> If you’re just starting out, begin there to build strong fundamentals.
+> Use those for API details; use this site to practice reading and explaining code.
 
 ## Content
 
-### 🧭 Graph Algorithms
+### Graph Algorithms
 
-Fundamental graph traversal logic used in system design and coding challenges.
+Traversal patterns used in dependency graphs, routing, search, and coding interviews.
 
-- [Graph Traversal](/graph-algorithms/graph-traversal) – **BFS**, **DFS**, adjacency lists, graph algorithms.
+- [Graph Traversal](/graph-algorithms/graph-traversal) – BFS, DFS, adjacency lists, directed and undirected path checks.
 
-### 📦 JS Native
+### JS Native
 
-Deep dive into native JavaScript methods and behavior. Each section includes polyfills ( custom implementation ),
-explanations and all possible use cases.
+Native language behavior explained through small custom implementations and edge cases.
 
 - [Map](/js-native/map-ds) – Map, WeakMap, Map.groupBy.
 - [Mutating Methods](/js-native/mutating-methods) – concat, fill, pop, push, reverse, shift, unshift, splice.
@@ -41,66 +35,64 @@ explanations and all possible use cases.
 - [Set and Object](/js-native/set-and-object) – Set, Object.groupBy, Object.assign, Array.entries.
 - [Transform Methods](/js-native/transform-methods) – filter, flat, flatMap, join, map, reduce, slice.
 
-### 📖 Learn JS and Mdn
+### Learn JS and MDN
 
-Essential learning topics pulled from MDN, Learn JS, interviews and my web dev job.
+Core language topics that are easy to use incorrectly when code becomes asynchronous or stateful.
 
 - [Advanced Patterns](/learn-js-and-mdn/advanced-patterns) – Memoize, Mixins, Promise Chaining, Promise Error Handling, Synchronous vs Asynchronous Errors in Promises, Proxy, Range Iterator, Shooters: Closures & Lexical Scope.
 - [Delay, Throttling and Debounce](/learn-js-and-mdn/async-and-timers) – Delay Decorator, Delaying function execution, Output Every Second, setInterval, setTimeout, throttling and debounce decorator.
-- [Core Concepts](/learn-js-and-mdn/core-concepts) – Understanding this, Loop Behavior: Pre- / Post-Increment, Object and Map Conversion, bind, Async Generators, Fibonacci ( Iterative Approach, Recursive Approach ).
-- [Event Loop](/learn-js-and-mdn/event-loop) – Event Loop edge cases — the **#1 most asked JavaScript interview topic**.
-- [This and Object Methods](/learn-js-and-mdn/object-methods) – Nuances of `this` across different method contexts — the **#2 most asked JavaScript interview topic**.
+- [Core Concepts](/learn-js-and-mdn/core-concepts) – `this`, loop behavior, object/map conversion, `bind`, async generators, Fibonacci.
+- [Event Loop](/learn-js-and-mdn/event-loop) – microtasks, macrotasks, timers, promises, `async`/`await`, and rendering callbacks.
+- [This and Object Methods](/learn-js-and-mdn/object-methods) – how `this` changes across object methods, callbacks, arrows, classes, and prototypes.
 
-### ⚙️ Lodash
+### Lodash
 
-Utility functions from [lodash](https://lodash.com/).
+Small utility functions that are useful to know even when you use [lodash](https://lodash.com/) in production.
 
 - [Chunk, Compact, Partition](/lodash/array-helpers) – chunk, compact, partition.
 - [Difference, Intersection, Union](/lodash/difference-and-intersection) – difference, differenceBy, intersection, union.
 - [Object Utilities](/lodash/sets-and-objects) – keyBy, omit, orderBy, pick, curry.
 
-### ⚛️ React
+### React
 
-React specific topics.
+React behavior that is easier to understand from render traces than from definitions.
 
 - [React Rendering](/react/rendering) – usePrevious, children.
 - [State Patterns](/react/state) – Normalized State, useReducer ( custom implementation ).
 
-### 🧩 System Design
+### System Design
 
-System design concepts often seen in real interviews.
+Small architecture exercises written in plain JavaScript.
 
-- [Redux and Twitter](/system-design/redux-and-twitter) – Redux reducer pattern, most used pattern for state management in react. Twitter feed pattern.
-- [Queue and Stack](/system-design/stack-and-queue) – Stacks and queues are core to how JavaScript works under the hood — and they show up in nearly every interview.
+- [Redux and Twitter](/system-design/redux-and-twitter) – reducer-driven state updates and a small feed-ranking model.
+- [Queue and Stack](/system-design/stack-and-queue) – FIFO/LIFO structures, async queues, and stack-based checks.
 
-### 🧠 Theory
+### Theory
 
 High-level principles and mental models.
 
 - [Composition vs Inheritance](/theory/composition-vs-inheritance) - Composition, Inheritance and Function Stack.
 - [SOLID in React](/theory/solid-react) - SOLID principles in React.
-- [Type Conversions](/theory/type-conversions) - Explore the magic behind JavaScript **type coercion** and equality checks.
+- [Type Conversions](/theory/type-conversions) - JavaScript coercion rules, equality checks, and operator behavior.
 
-### 🔧 Various
+### Various
 
-Advanced utility functions and transformation logic — real-world inspired.
+Practical transformations and utility patterns that do not fit a single category.
 
-- [Call, bind, apply](/various/call-bind-apply) – Understanding `call`, `bind`, and `apply` is essential for mastering how JavaScript handles function context (`this`). **Often asked on interviews**.
-- [Dictionary of Nested](/various/dictionary-of-nested) – Deeply nested array structure (e.g., categories → subcategories → items) into a dictionary format for **constant-time lookup** by `id`.
+- [Dictionary of Nested](/various/dictionary-of-nested) – nested category data converted into dictionaries for fast lookup by `id`.
 - [Group List by Quarters](/various/group-list-by-quarters) – Groups monthly financial data by calendar quarters.
 - [Transform Lists and Trees](/various/list-to-tree) – List to tree, tree to list, flat nested items.
-- [Promises Closures Event Loop](/various/promises-closures-async) – Async behavior, state retention, and timing execution in complex JavaScript code.
 - [Sorting](/various/sorting) – bubble sort, insertion sort, selection sort.
-- [Various Utilities](/various/utils) – clsx, contains duplicate, deep clone, filter by related property, filterMap, innerJoin, Reducer pattern with actions, Retry with exponential backoff, Shuffle (Fisher-Yates Algorithm), Topological Sort.
+- [Various Utilities](/various/utils) – clsx, contains duplicate, deep clone, filter by related property, filterMap, innerJoin, Reducer pattern with actions, Retry with fixed delay, Shuffle (Fisher-Yates Algorithm), Topological Sort.
 
 ## About Me
 
 I’m a frontend developer based in Russia, currently working at [Sellego](https://sellego.com/blog/).
 I specialize in building modern web apps using **React** on the frontend and **Node.js** on the backend.
 
-## Github
+## GitHub
 
-- [this project](https://github.com/JohnKucharsky/advancedjavascript)
+- [Advanced JavaScript repository](https://github.com/JohnKucharsky/advancedjavascript)
 - [react effector mui](https://github.com/JohnKucharsky/react-effector-mui)
 - [react redux mui](https://github.com/JohnKucharsky/react-redux-mui)
 - [react mobx mui](https://github.com/JohnKucharsky/react-mobx-mui)

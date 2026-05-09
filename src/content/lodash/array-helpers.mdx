@@ -1,20 +1,19 @@
 ---
-title: Lodash Array Utilities in JavaScript – chunk, compact, and partition
-description: Learn how to recreate Lodash's chunk, compact, and partition methods from scratch in plain JavaScript.
+title: Lodash chunk, compact, and partition in JavaScript
+description: Recreate Lodash chunk, compact, and partition utilities in plain JavaScript with simple array examples.
 sidebarTitle: Chunk, Compact, Partition
 ---
 
 # JavaScript Array Utilities: `chunk`, `compact`, and `partition`
 
-These utility functions are inspired by Lodash and solve common data transformation problems.
+These three helpers are small, but they appear often in UI code: split a list into rows, remove empty values, or divide items into two groups. The implementations use native array methods so the behavior is easy to adapt.
 
 ## chunk
 
 The [`_.chunk()`](https://lodash.com/docs/4.17.15#chunk) function in Lodash splits an array into
-smaller arrays, or "chunks," of a specified size. It returns a new array of chunks, making it easier to
-manage large datasets by dividing them into smaller, more manageable parts.
+smaller arrays, or "chunks," of a specified size. It is useful when a flat list needs to be rendered as rows, pages, or batches.
 
-This example demonstrates a custom implementation of Lodash's `_.chunk()` function to achieve the same result.
+The implementation uses the current index to decide which chunk each item belongs to.
 
 ```js filename="chunk" copy
 const chunk = (inputArray, quantity) => {
@@ -42,9 +41,9 @@ console.log(chunk(inputArray, perChunk));
 
 The [`_.compact()`](https://lodash.com/docs/4.17.15#compact) function in Lodash creates an array by removing
 all falsey values from the provided array. Falsey values include `false`, `null`, `0`, `""`, `undefined`, and `NaN`.
-This is useful for cleaning up arrays and removing unwanted, invalid values.
+Use it when falsey values should be treated as missing values, not meaningful data.
 
-This example shows a custom implementation of Lodash's `_.compact()` function to filter out falsey values from the input array.
+The implementation is intentionally short because `Boolean` already expresses the predicate.
 
 ```js filename="compact" copy
 const compact = (inputArray) => inputArray.filter(Boolean);
@@ -60,8 +59,7 @@ based on a predicate function. The first group contains elements for which the p
 and the second group contains elements for which the predicate returns falsey. The predicate function is
 invoked with one argument: the value of the element.
 
-This custom implementation mimics the `_.partition()` method by using the `reduce()` function to iterate over
-the array and push elements into two arrays based on the result of the predicate.
+The implementation uses `reduce()` with two buckets: index `0` for truthy results and index `1` for falsey results.
 
 ```js filename="partition" copy
 function partition(array, predicate) {

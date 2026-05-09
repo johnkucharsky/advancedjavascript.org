@@ -8,11 +8,23 @@ import "nextra-theme-docs/style.css";
 import "./global.css";
 import Image from "next/image";
 import Link from "next/link";
+import { WebSiteStructuredData } from "./structured-data";
+
+const defaultDescription =
+  "JavaScript interview snippets and job-task examples for mastering async code, arrays, React, data structures, and core language behavior.";
 
 export const metadata = {
   metadataBase: new URL("https://www.advancedjavascript.org"),
+  title: {
+    default: "Advanced JavaScript",
+    template: "%s | Advanced JavaScript",
+  },
+  description: defaultDescription,
   applicationName: "Advanced JavaScript",
   generator: "Next.js",
+  alternates: {
+    canonical: "/",
+  },
   appleWebApp: {
     title: "Advanced JavaScript",
   },
@@ -21,14 +33,17 @@ export const metadata = {
     "msapplication-TileColor": "#fff",
   },
   twitter: {
-    site: "https://www.advancedjavascript.org",
+    card: "summary_large_image",
+    title: "Advanced JavaScript",
+    description: defaultDescription,
+    images: ["/opengraph-image.png"],
   },
   openGraph: {
     title: "Advanced JavaScript",
-    description:
-      "JavaScript snippets based on real interview questions and job tasks, crafted to give you hands-on experience with advanced concepts.",
-    url: "https://www.advancedjavascript.org",
+    description: defaultDescription,
+    url: "/",
     siteName: "Advanced JavaScript",
+    locale: "en_US",
     images: [
       {
         url: "/opengraph-image.png",
@@ -45,7 +60,7 @@ export default async function RootLayout({ children }) {
         <div>
           <div>Advanced JavaScript</div>{" "}
           <div style={{ opacity: "60%", fontSize: "13px" }}>
-            Snippets from Real Interviews
+            Real interview snippets
           </div>
         </div>
       }
@@ -78,6 +93,7 @@ export default async function RootLayout({ children }) {
       <GoogleTagManager gtmId={"GTM-P4PTVL7P"} />
       <Head faviconGlyph="✦" />
       <body>
+        <WebSiteStructuredData />
         <Layout
           navbar={navbar}
           docsRepositoryBase="https://github.com/JohnKucharsky/advancedjavascript/src"

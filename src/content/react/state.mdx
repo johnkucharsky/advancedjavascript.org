@@ -1,27 +1,20 @@
 ---
-title: React State Patterns – Normalized State and useReducer Hook
-description: Complex React state using normalized structures and the useReducer hook. Includes examples for recursive state updates and useReducer logic in TypeScript.
+title: React Normalized State and useReducer Patterns
+description: Learn React normalized state and useReducer patterns with recursive state updates and TypeScript reducer examples.
 sidebarTitle: State Patterns
 ---
 
 # React State Patterns: Normalized State and `useReducer`
 
-Managing state in complex React applications can be simplified using two powerful patterns: **normalized state** and the **`useReducer` hook**.
-This guide demonstrates how to structure deeply nested data for easier updates and how to use reducers to manage state transitions cleanly and predictably.
+Complex React state becomes hard to update when the data shape hides relationships. Two patterns make those updates predictable: normalize nested data by id, and route state changes through reducer actions.
 
 ## Normalized State
 
-The concept of **normalized state** is commonly used in managing complex data structures, such as nested objects or arrays,
-in a way that makes it easier to update and manage state in applications. This approach involves flattening the structure into
-a more accessible format, often using an object with unique IDs as keys, and maintaining relationships between the entities via arrays of IDs (as seen in `childIds`).
+Normalized state stores entities by id and keeps relationships as id arrays. Instead of walking a deeply nested tree on every update, the code can update one record and adjust the relationship list that points to it.
 
-In this example, the `TravelPlanComponent` component simulates a travel planning system where each location (node) has a
-title and a set of child locations (nested nodes). The `normalized state` design keeps all the locations in a flat object,
-and relationships between locations are managed using the `childIds` array.
+In this example, each location is a node with a title and `childIds`. The tree is rendered recursively, but the state itself stays flat.
 
-The `removeNodeAndChildren` function recursively removes a node and its children from the state, and `handleComplete` ensures
-that a child node is removed from its parent node’s `childIds`. This architecture makes it easier to update and delete nodes
-or manage complex state in React applications, especially with deep nested structures.
+`removeNodeAndChildren` deletes a node and its descendants. `handleComplete` also removes the completed node id from its parent. Those two updates keep the entity map and relationship list in sync.
 
 ```tsx filename="Normalized State" copy
 import { useState } from "react";
@@ -163,15 +156,9 @@ const RenderPlace = ({
 
 ## useReducer
 
-The `useReducer` hook is a more advanced alternative to `useState` for managing complex state logic in React.
-It allows you to handle state transitions using a reducer function, similar to how Redux works. `useReducer`
-is especially useful when the state depends on previous state values or involves more complex state updates.
+`useReducer` is useful when state changes are easier to describe as actions than as isolated setter calls. A reducer receives the current state and an action, then returns the next state.
 
-In this example, `useReducer` is used to manage a collection of messages. The `messengerReducer` function defines
-the logic for adding and removing messages. The reducer receives the current state and an action, then returns the updated state based on the action type.
-
-The `useReducer` hook returns the current state and a dispatch function to trigger state updates. The state is updated
-when a button is clicked, either to add a new message or remove the last message.
+In this example, messages are stored by id. The reducer handles adding a message and removing the latest message, while the component only dispatches actions from button clicks.
 
 ```tsx filename="useReducer" copy
 import { useState } from "react";

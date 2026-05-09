@@ -1,34 +1,35 @@
 ---
-title: JavaScript Map, WeakMap, and Map.groupBy()
-description: Explore Map, WeakMap, and groupBy() in JavaScript and difference between them.
+title: JavaScript Map, WeakMap, and Map.groupBy
+description: Learn Map, WeakMap, object keys, SameValueZero, and Map.groupBy with practical JavaScript examples.
 sidebarTitle: Map
 ---
 
 # JavaScript Maps, WeakMaps, and Map.groupBy()
 
-Explore how `Map`, `WeakMap`, and `Map.groupBy()` work in JavaScript. Learn the differences between Maps and plain objects,
-how `WeakMap` handles memory safely, and how to group values using custom `groupBy()`.
+`Map`, `WeakMap`, and `Map.groupBy()` solve different data-shaping problems. Use `Map` when keys can be any value and insertion order matters. Use `WeakMap` when object keys should not prevent garbage collection. Use grouping when a flat list needs to become lookup-friendly buckets.
 
 ## Map
 
 The [`Map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
 object holds **key-value pairs** and remembers the original insertion order of the keys.
 Keys can be **any value**, including objects, functions, and `NaN`. Unlike objects, maps offer consistent
-key ordering and better performance for frequent additions and deletions.
+key ordering and a cleaner API for frequent additions and deletions.
 
 Instance methods:
- - `Map.prototype.clear()`
- - `Map.prototype.delete()`
- - `Map.prototype.entries()`
- - `Map.prototype.forEach()`
- - `Map.prototype.get()`
- - `Map.prototype.has()`
- - `Map.prototype.keys()`
- - `Map.prototype.set()`
- - `Map.prototype.values()`
+
+- `Map.prototype.clear()`
+- `Map.prototype.delete()`
+- `Map.prototype.entries()`
+- `Map.prototype.forEach()`
+- `Map.prototype.get()`
+- `Map.prototype.has()`
+- `Map.prototype.keys()`
+- `Map.prototype.set()`
+- `Map.prototype.values()`
 
 Instance properties:
- - `Map.prototype.size`
+
+- `Map.prototype.size`
 
 ```js filename="Map" copy
 const map = new Map();
@@ -127,17 +128,12 @@ console.log(map2.get(NaN)); // NaN value
 The [`WeakMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap)
 object is a special kind of map whose keys must be **objects**, and those keys are **weakly referenced** — meaning they do **not prevent garbage collection**.
 
-This makes `WeakMap` useful for storing metadata or private data tied to object lifetimes.
-However, it does not support iteration or methods like `.keys()` or `.clear()`.
+- `weakMap.set(key, value)`
+- `weakMap.get(key)`
+- `weakMap.delete(key)`
+- `weakMap.has(key)`
 
- - `weakMap.set(key, value)`
- - `weakMap.get(key)`
- - `weakMap.delete(key)`
- - `weakMap.has(key)`
-
-If an object has lost all other references, then it is to be
-garbage-collected automatically. But technically it’s not
-exactly specified when the cleanup happens
+When an object loses all other references, it becomes eligible for garbage collection. JavaScript does not specify exactly when cleanup happens, so `WeakMap` should not be used for observable timing logic.
 
 ```js filename="WeakMap" copy
 let john = { name: "John" };
@@ -165,9 +161,6 @@ console.log(weakMap.get(doe)); // undefined
 The [`Map.groupBy()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/groupBy)
 static method groups elements from an iterable based on the return value of a callback function.
 It returns a new `Map` where each key is the grouping criterion and each value is an array of items in that group.
-
-This example provides a polyfill-style custom implementation of `Map.groupBy()` and demonstrates grouping numbers,
-objects by property, and even using objects as keys for advanced use cases.
 
 ```js filename="Map.groupBy" copy
 // Map.groupBy isn't available yet

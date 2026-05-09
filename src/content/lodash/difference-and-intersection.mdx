@@ -1,13 +1,12 @@
 ---
-title: JavaScript Set Utilities – difference, intersection, union
-description: Learn how to implement Lodash utilities like difference, differenceBy, intersection, and union with practical code examples.
+title: Lodash difference, intersection, and union
+description: Recreate Lodash difference, differenceBy, intersection, and union using JavaScript arrays and Set-based utilities.
 sidebarTitle: Difference, Intersection, Union
 ---
 
 # JavaScript Set Utilities: `difference`, `differenceBy`, `intersection`, `union`
 
-Reimplement Lodash's most common set operations using native JavaScript. Learn how to compare arrays, remove duplicates, and find overlaps using `Set`
-and concise functional patterns.
+Set-style operations answer simple questions about arrays: what is missing, what overlaps, and what unique values remain after merging. `Set` gives these implementations fast membership checks and keeps the code focused on the comparison rule.
 
 ## difference
 
@@ -15,8 +14,7 @@ The [`_.difference()`](https://lodash.com/docs/4.17.15#difference) method return
 the first array that are not present in any of the other arrays provided. It computes the difference
 by using the `Set` data structure for efficient lookups.
 
-This custom implementation compares two arrays and finds the elements unique to each array, returning the
-differences in two parts: one for elements in `arr1` but not in `arr2`, and one for elements in `arr2` but not in `arr1`.
+This implementation returns both sides of the difference: values from `arr1` missing in `arr2`, and values from `arr2` missing in `arr1`.
 
 ```js filename="difference" copy
 const findDifference = function (arr1, arr2) {
@@ -48,9 +46,6 @@ console.log(result); // [ [ 1 ], [] ]
 The [`_.differenceBy()`](https://lodash.com/docs/4.17.15#differenceBy) method works like `difference()`,
 but allows you to compare elements by a specific property or transformation function. You pass a key or
 iteratee to compare the objects by their properties.
-
-In this custom implementation, we compare objects in `arr1` and `arr2` by a key (`x`), and return the
-differences based on that key.
 
 ```js filename="differenceBy" copy
 const differenceBy = (arr1, arr2, key) => {
@@ -87,8 +82,7 @@ The [`_.intersection()`](https://lodash.com/docs/4.17.15#intersection) method
 computes the intersection of two or more arrays. It returns a new array containing the
 elements that are present in all provided arrays.
 
-This custom implementation compares two arrays by converting them to `Set` objects for
-efficient lookup and finding the common elements between them.
+This implementation converts both arrays to sets, then keeps only values that appear in both.
 
 ```js filename="intersection" copy
 const intersection = function (nums1, nums2) {
@@ -113,9 +107,7 @@ console.log(intersection([2, 1], [2, 3])); // [ 2 ]
 The [`_.union()`](https://lodash.com/docs/4.17.15#union) method creates a new array of unique values by
 combining all given arrays, preserving the order of elements.
 
-This custom implementation utilizes the `Set` object to remove duplicates and `concat()` to merge all arrays before
-applying `Array.from()` to convert the set back into an array.
-
+This implementation merges the inputs first, then converts the merged values through a `Set` to remove duplicates while keeping first-seen order.
 
 ```js filename="union" copy
 const union = (...arrays) => {

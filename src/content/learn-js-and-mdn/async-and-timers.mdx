@@ -1,21 +1,18 @@
 ---
-title: JavaScript Timing Utilities - Delay, Debounce, Throttle
-description: Learn to control function timing in JavaScript using delay decorators, debounce, throttle, setTimeout, and setInterval.
+title: JavaScript Debounce, Throttle, and Timers
+description: Learn JavaScript delay decorators, debounce, throttle, setTimeout, and setInterval with practical timing examples.
 sidebarTitle: Delay, Throttling and Debounce
 ---
 
 # JavaScript Delay, Debounce, Throttle, and Async Execution
 
-Master JavaScript's timing mechanisms like `delay`, `debounce`, `throttle`, `setTimeout`, and `setInterval`.
-These tools help control execution flow, improve performance, and manage async behavior — most common question on interviews.
+Timers are not only about waiting. They decide when work is allowed to run, how often a function can fire, and whether an object method keeps the right `this` value after it is delayed.
 
 ## Delay Decorator
 
-This example defines a `delay` decorator that wraps a function and delays its execution by a specified number of milliseconds.
+This decorator wraps a function and delays its execution by a specified number of milliseconds.
 
-It preserves the correct `this` context using `Function.prototype.apply`, allowing methods from different
-objects to be delayed without losing their binding. Useful for debouncing, throttling, or deferring side effects.
-
+It preserves `this` with `Function.prototype.apply`, so the same delayed method can be attached to different objects without losing context.
 
 ```js filename="delay decorator" copy
 const obj1 = {
@@ -47,8 +44,7 @@ obj2.delayedShowInfo("Info"); // Info: obj2 info
 
 ## Delaying function execution with and without context (`this`)
 
-This example shows how to create a `delay` utility that defers a function's execution by a
-specified time using `setTimeout`. It works great for standalone functions but does **not preserve `this` context** when used with object methods.
+This version delays a standalone function with `setTimeout`, but it does **not preserve `this`** when used with object methods.
 
 For object methods, `Function.prototype.bind` or `apply` should be used to retain proper context.
 
@@ -82,11 +78,7 @@ obj1.delayedShowInfo("Info", "one"); // Info: undefined
 
 ## Output Every Second
 
-[setTimeout and setInterval](https://javascript.info/settimeout-setinterval)
-
-This example demonstrates two ways to print numbers at 1-second intervals using `setInterval` and recursive `setTimeout`.
-Both approaches achieve the same result, but `setTimeout` gives finer control over the delay between executions — especially useful for dynamic scheduling or error handling.
-
+Both versions print numbers at one-second intervals. `setInterval` repeats until cleared. Recursive `setTimeout` schedules the next run only after the current run finishes, which gives better control when work duration can vary.
 
 ### setInterval
 
@@ -132,13 +124,12 @@ printNumbers(5, 10);
 // 5 immediately, and 6 to 10 with 1s between
 ```
 
-## throttling and debounce decorator
+## Throttle and Debounce Decorators
 
-[call-apply-decorators](https://javascript.info/call-apply-decorators)
+Debounce and throttle both limit calls, but they answer different questions:
 
-Compared to the debounce decorator, throttling is completely different:
-- `debounce` runs the function once after the "cooldown" period.
-- `throttle` runs it not more often than given `ms` time
+- `debounce` waits for quiet time, then runs once.
+- `throttle` allows a call immediately, then blocks further calls until the time window ends.
 
 ### debounce
 

@@ -1,10 +1,12 @@
 ---
-title: Mutating JavaScript Array Methods – Custom Implementations
-description: Custom implementations of JavaScript array methods that modify the original array, including push(), pop(), splice(), fill(), reverse(), and more.
+title: JavaScript Array Method Polyfills
+description: Recreate JavaScript array methods like push, pop, splice, fill, reverse, concat, and unshift to understand native behavior.
 sidebarTitle: Mutating Methods
 ---
 
-# Custom Implementations for Mutating JavaScript Array Methods
+# Custom Implementations for JavaScript Array Methods
+
+Array methods look simple until you care about mutation, return values, and indexes. Rebuilding the common methods makes those rules visible. `concat()` is included as the contrast case: it returns a new array instead of changing the original.
 
 These array methods modify the original array in-place. This page includes custom implementations of JavaScript mutating methods
 like `push()`, `pop()`, `splice()`, `fill()`, `reverse()`, and more — perfect for understanding how they work internally.
@@ -44,8 +46,6 @@ console.log(concat);
 The [`fill()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill)
 method changes all elements in an array between the specified `start` and `end` indices to a **static value**, in place.
 It returns the **modified array** and is useful for quickly initializing or resetting arrays.
-
-This example includes a custom implementation of `Array.prototype.fill()` with support for negative indices.
 
 ```js filename="fill" copy
 Array.prototype.customFill = function (value, start = 0, end = this.length) {
@@ -90,8 +90,6 @@ console.log([1, 2, 3].customFill(4, -3, -2)); // [4, 2, 3]
 The [`pop()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop)
 method removes the **last element** from an array and returns it. It mutates the original array by reducing its length by one.
 
-This example provides a custom implementation of `Array.prototype.pop()` that replicates native behavior.
-
 ```js filename="pop" copy
 Array.prototype.customPop = function () {
   const length = this.length;
@@ -117,8 +115,6 @@ console.log(fruits); // [ "Apple", "Banana" ]
 The [`push()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push)
 method adds one or more elements to the **end of an array** and returns the **new length** of the array.
 It's a common and efficient way to grow an array in-place.
-
-This example demonstrates a custom implementation of `Array.prototype.push()` that handles multiple arguments and mimics native behavior.
 
 ```js filename="push" copy
 Array.prototype.customPush = function () {
@@ -147,8 +143,6 @@ The [`reverse()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refere
 method reverses an array **in place** and returns the **modified array**.
 The first element becomes the last, and the last becomes the first, effectively reversing the array's order.
 
-This custom implementation of `Array.prototype.reverse()` reverses the array elements by swapping them in place.
-
 ```js filename="reverse" copy
 Array.prototype.customReverse = function () {
   const middle = Math.floor(this.length / 2);
@@ -174,8 +168,6 @@ console.log(array1); // [ 'four', 'three', 'two', 'one' ]
 
 The [`shift()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/shift) method removes the **first element** from an array and returns it,
 shifting the remaining elements down. This method mutates the array by reducing its length.
-
-This custom implementation of `Array.prototype.shift()` manually shifts the array elements and returns the removed first element.
 
 ```js filename="shift" copy
 Array.prototype.customShift = function () {
@@ -207,8 +199,8 @@ The [`unshift()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refere
 In this custom implementation, the method first shifts all existing elements to the right to make space for the new elements.
 Then, it inserts the new elements at the beginning of the array and returns the updated length.
 
-```js filename="shift" copy
-Array.prototype.unshift = function (...elements) {
+```js filename="unshift" copy
+Array.prototype.customUnshift = function (...elements) {
   const originalLength = this.length;
   const totalLength = elements.length + originalLength;
 
@@ -226,7 +218,7 @@ Array.prototype.unshift = function (...elements) {
 };
 
 const arr = [3, 4, 5];
-arr.unshift(1, 2);
+arr.customUnshift(1, 2);
 console.log(arr); // [1, 2, 3, 4, 5]
 console.log(arr.length); // 5
 ```
@@ -235,9 +227,6 @@ console.log(arr.length); // 5
 
 The [`splice()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice)
 method changes the contents of an array by **removing or replacing** existing elements and/or adding new elements in place.
-
-This custom implementation of `Array.prototype.splice()` handles negative indices, normalization of `deleteCount`,
-and array modification in place, while returning the removed elements.
 
 ```js filename="splice" copy
 Array.prototype.customSplice = function (
@@ -307,7 +296,7 @@ console.log({ myFish2, removed2 });
 // splice(array.length, 0, ...elements) inserts elements at the
 // end of the array like push().
 const myFish3 = ["angel", "clown", "mandarin"];
-const removed3 = myFish3.customSplice(myFish.length, 0, "sturgeon");
+const removed3 = myFish3.customSplice(myFish3.length, 0, "sturgeon");
 console.log({ myFish3, removed3 });
 // myFish3: [ 'angel', 'clown', 'mandarin', 'sturgeon' ], removed3: []
 
@@ -351,7 +340,3 @@ const removed9 = myFish9.customSplice(2);
 console.log({ myFish9, removed9 });
 // myFish9: [ 'angel', 'clown' ], removed9: [ 'mandarin', 'sturgeon' ]
 ```
-
-
-
-

@@ -1,13 +1,12 @@
 ---
-title: Custom Implementations of Javascript Promises
-description: Implementation of JavaScript's built-in Promise methods like all, race, any, and allSettled. Learn how they work internally with these code snippets.
+title: JavaScript Promise Method Polyfills
+description: Recreate Promise.all, Promise.race, Promise.any, and Promise.allSettled to understand JavaScript async behavior.
 sidebarTitle: Promises
 ---
 
 # Custom Implementations of Promise.all, Promise.any, Promise.allSettled, and Promise.race
 
-Learn how JavaScript’s static Promise methods work by building them from scratch. This page covers custom implementations of `Promise.all`,
-`Promise.allSettled`, `Promise.any`, and `Promise.race` — useful for understanding async behavior, debugging, and preparing for interviews.
+Static Promise methods differ in one important way: they wait for different settlement conditions. Implementation below makes that contract obvious: preserve order for `Promise.all`, collect every result for `allSettled`, resolve on the first success for `any`, and settle on the first completion for `race`.
 
 ## Promise.all
 
@@ -15,8 +14,6 @@ The [`Promise.all()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Re
 
 - **fulfills** when all input promises have fulfilled, returning an array of results in the original order
 - **rejects** immediately if any promise rejects, with the first rejection reason
-
-This example includes a custom implementation of `Promise.all()` that resolves all promises and preserves their order, even if they complete at different times.
 
 ```js filename="Promise.all" copy
 function myPromiseAll(promises) {
@@ -73,8 +70,6 @@ The [`Promise.allSettled()`](https://developer.mozilla.org/en-US/docs/Web/JavaSc
 method returns a promise that **resolves after all promises in the input iterable have settled**, regardless of whether they were fulfilled or rejected.
 Each result is an object with a `status` of either `"fulfilled"` or `"rejected"` and contains either the `value` or the `reason`.
 
-This example demonstrates a custom implementation of `Promise.allSettled()` using `.then()` and `.catch()` handlers for consistent result formatting.
-
 ```js filename="Promise.allSettled" copy
 const rejectHandler = (reason) => ({ status: "rejected", reason });
 const resolveHandler = (value) => ({ status: "fulfilled", value });
@@ -112,9 +107,6 @@ The [`Promise.any()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Re
 method returns a promise that **fulfills as soon as any of the input promises is fulfilled**.
 If **all** promises reject, it rejects with an [`AggregateError`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError)
 containing all rejection reasons.
-
-This example demonstrates a custom implementation of `Promise.any()` that resolves with the first successful result or throws an aggregate error if none succeed.
-
 
 ```js filename="Promise.any" copy
 Promise.customAny = function (promises) {
@@ -154,8 +146,6 @@ Promise.customAny(promises).then((value) => console.log(value)); // quick
 The [`Promise.race()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race)
 method returns a promise that **settles as soon as the first input promise settles** — whether it fulfills or rejects.
 This makes it useful when you're interested only in the fastest outcome, regardless of its result.
-
-This example includes a custom implementation of `Promise.race()` that resolves or rejects based on whichever promise finishes first.
 
 ```js filename="Promise.race" copy
 Promise.customRace = function (promises) {

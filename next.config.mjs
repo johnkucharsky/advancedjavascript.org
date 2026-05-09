@@ -9,4 +9,17 @@ const withNextra = nextra({
 
 export default withNextra({
   reactStrictMode: true,
+  async headers() {
+    return [
+      {
+        source: "/advanced-javascript.pdf",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, noarchive",
+          },
+        ],
+      },
+    ];
+  },
 });

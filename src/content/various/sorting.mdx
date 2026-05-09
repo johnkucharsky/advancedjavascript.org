@@ -1,21 +1,19 @@
 ---
-title: JavaScript Sorting Algorithms – Bubble, Insertion, and Selection
-description: Learn how common sorting algorithms like Bubble Sort, Insertion Sort, and Selection Sort work in JavaScript. Includes custom implementations and explanations.
+title: JavaScript Sorting Algorithms
+description: Learn Bubble Sort, Insertion Sort, and Selection Sort in JavaScript with custom implementations and explanations.
 sidebarTitle: Sorting Algorithms
 ---
 
 # JavaScript Sorting Algorithms
 
-Sorting algorithms are foundational to understanding performance and logic in computer science. These are 3 fundamental ways to sort an array.
+These three sorting algorithms are not usually the fastest choice in production. They are still good teaching examples because comparisons, swaps, and loop boundaries are easy to see.
 
-## bubble sort
+## Bubble Sort
 
-The [`bubbleSort()`](https://www.w3schools.com/dsa/dsa_algo_bubblesort.php) function sorts an array by repeatedly stepping through the list,
+`bubbleSort()` sorts an array by repeatedly stepping through the list,
 comparing adjacent items, and swapping them if they are in the wrong order. This process is repeated until the array is sorted.
 
-This custom implementation demonstrates the bubble sort algorithm, where the outer loop ensures that each pass moves the largest element to its
-correct position. The process is optimized by checking whether any elements were swapped in the inner loop, allowing the algorithm to break early
-if the array is already sorted.
+The outer loop controls how many passes are needed. After each pass, the largest remaining value has moved to its final position. The `swapped` flag lets the algorithm stop early when the array is already sorted.
 
 ```js filename="bubble sort" copy
 function bubbleSort(array) {
@@ -44,16 +42,15 @@ console.log(sortedArray);
 // [ 3, 7, 9, 11, 12 ]
 ```
 
-## insertion sort
+## Insertion Sort
 
-The [`insertionSort()`](https://www.w3schools.com/dsa/dsa_algo_insertionsort.php) function sorts an array by
+`insertionSort()` sorts an array by
 repeatedly picking the next element and inserting it into the correct position within the already sorted portion of the array.
 It builds the sorted array one item at a time by comparing the current item to the previous ones.
 
-This custom implementation demonstrates the insertion sort algorithm. For each element, it is compared to the previous ones and
-inserted into the correct position, shifting elements as necessary.
+Insertion sort keeps the left side of the array sorted. For each new value, it shifts larger values to the right until the correct position is open.
 
-```js filename="intersection sort" copy
+```js filename="insertion sort" copy
 function insertionSort(array) {
   const n = array.length;
 
@@ -81,15 +78,14 @@ console.log(sortedArray);
 // [ 5, 11, 12, 22, 25, 34, 64, 90 ]
 ```
 
-## selection sort
+## Selection Sort
 
-The [`selectionSort()`](https://www.w3schools.com/dsa/dsa_algo_selectionsort.php) algorithm sorts an
+`selectionSort()` sorts an
 array by repeatedly finding the smallest element from the unsorted part and swapping it with the element at
 the current position. It iterates through the array, and in each iteration, selects the smallest element from
 the remaining unsorted portion and moves it to its correct position.
 
-This custom implementation demonstrates the selection sort algorithm by scanning the array for the smallest element
-and swapping it to the front, progressively moving through the array.
+Selection sort scans the unsorted part for the smallest value, then moves that value into the current position. It does fewer swaps than bubble sort, but still scans repeatedly.
 
 ```js filename="selection sort" copy
 const selectionSort = (arr) => {

@@ -1,21 +1,18 @@
 ---
-title: Convert Lists into Trees, Dictionaries
-description: Learn how to convert flat lists into trees, deeply nested data into flat lists, and transform nested structures into fast-access dictionaries in JavaScript.
+title: Convert JavaScript Lists to Trees
+description: Convert flat JavaScript lists into trees, flatten nested items, and transform category data into lookup-friendly structures.
 sidebarTitle: Transform Lists & Trees
 ---
 
 # Transform Lists and Nested Structures
 
-This guide shows how to convert common data structures for better access, mutation, and integration — including lists, trees, dictionaries,
-and flattened arrays.
+Many APIs return flat records, while UI components often need nested trees. The examples show both directions: build a tree from `id`/`parentId`, flatten it back to a list, and flatten nested category data into rows with parent metadata.
 
-## 🔁 List to Tree
+## List to Tree
 
-This utility transforms a flat list of items (with `id` and `parentId` fields) into a nested **tree structure**.
-It uses a `Map` to efficiently link children to their parents while preserving the hierarchy.
+This utility transforms a flat list of items with `id` and `parentId` fields into a nested tree. A `Map` stores every node by id first, then the second pass attaches each node to its parent.
 
-It also includes a `treeToList()` function that **flattens** a tree back into a list — useful for data normalization,
-storing tree nodes in databases, or syncing front-end trees with backend updates.
+The same section includes `treeToList()`, which flattens the tree back into records for persistence, normalization, or sending edited tree data back to an API.
 
 ```js filename="listToTree" copy
 function listToTree(items) {
@@ -130,11 +127,11 @@ console.log(flatList);
 // ]
 ```
 
-## 🧩 Flat Nested Items (With Category + Subcategory)
+## Flat Nested Items with Category and Subcategory
 
-Transforms deeply nested category-subcategory-item data into a flat array where each item contains metadata about its parent subcategory and category.
+This transformation turns deeply nested category data into a flat array where each item keeps the names of its parent subcategory and category.
 
-You can do it manually with loops or concisely with `flatMap()`.
+The first version uses explicit loops. The second version uses `flatMap()` to express the same flattening directly.
 
 ```js filename="flatNested" copy
 const data = [

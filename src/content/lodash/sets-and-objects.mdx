@@ -1,13 +1,12 @@
 ---
-title: JavaScript Object Utilities – keyBy, omit, orderBy, pick, curry
-description: Recreate Lodash keyBy, omit, orderBy, pick, and curry methods in vanilla JavaScript.
+title: Lodash Object Utilities in JavaScript
+description: Recreate Lodash keyBy, omit, orderBy, pick, and curry in vanilla JavaScript with object and array examples.
 sidebarTitle: Object Utilities
 ---
 
 # JavaScript Object Utilities: `keyBy`, `omit`, `orderBy`, `pick`, `curry`
 
-This guide covers powerful utility functions inspired by Lodash — including ways to transform objects, sort data, extract or exclude fields,
-and write curried functions — all with custom JavaScript implementations.
+These helpers cover common object operations: index a collection by a key, remove fields, sort rows, select fields, and partially apply a function. The value is in the shape of the transformation, not in memorizing the Lodash API name.
 
 ## keyBy
 
@@ -15,8 +14,7 @@ The [`_.keyBy()`](https://lodash.com/docs/4.17.15#keyBy) method creates an objec
 keys generated from the results of running each element in the collection through an iteratee
 function. The iteratee can be a function or property name.
 
-This custom implementation maps each item in the collection to a key determined by the provided iteratee,
-and then assigns the item to that key in the result object.
+The implementation maps each item to a key, then stores the item under that key in the result object.
 
 ```js filename="keyBy" copy
 function keyBy(collection, iteratee) {
@@ -50,7 +48,7 @@ console.log(res2);
 The [`_.omit()`](https://lodash.com/docs/4.17.15#omit) method creates a shallow copy of an object without the
 specified properties. The properties to omit can be provided as a single key or an array of keys.
 
-This custom implementation removes the given properties from the object by first creating a copy and then deleting the specified keys.
+The implementation creates a shallow copy first, then deletes the requested keys from the copy.
 
 ```js filename="omit" copy
 function omit(obj, keys) {
@@ -87,10 +85,9 @@ console.log(omitted2);
 ## orderBy
 
 The [`_.orderBy()`](https://lodash.com/docs/4.17.15#orderBy) method sorts an array of objects based on
-one or more properties. You can specify the sort order for each property as either ascending (`"asc"`) or descending (`"desc"`).
+one property. You can specify the sort order as either ascending (`"asc"`) or descending (`"desc"`).
 
-This custom implementation replicates the `_.orderBy()` method by accepting an array, a property to sort by, and
-an optional order parameter (`"asc"` by default). The array is first copied to avoid mutation, then sorted based on the specified property and order.
+The implementation copies the array before sorting so the original input is not mutated.
 
 ```js filename="orderBy" copy
 function orderBy(array, property, order = "asc") {
@@ -132,8 +129,7 @@ console.log(sortedByUserDesc);
 The [`_.pick()`](https://lodash.com/docs/4.17.15#pick) method creates a new object by picking
 the specified properties from an existing object. It accepts either a single key or an array of keys to extract.
 
-This custom implementation mimics the `_.pick()` method by using `reduce()` to iterate over the array of
-keys and select only the properties that exist in the source object, returning a new object with the selected properties.
+The implementation reduces the requested keys into a new object and skips keys that do not exist on the source object.
 
 ```js filename="pick" copy
 function pick(obj, keys) {
@@ -167,8 +163,7 @@ The [`_.curry()`](https://lodash.com/docs/4.17.15#curry) function in Lodash tran
 function into a curried version that can be called with a series of partial arguments. Instead of
 calling the function with all arguments at once, you can call it progressively, one argument at a time.
 
-This example shows a custom implementation of currying for the `sum` function, allowing it to be invoked
-with one argument at a time or multiple arguments in a sequence.
+The implementation keeps collecting arguments until it has enough to call the original function.
 
 ```js filename="curry" copy
 function curry(fn) {

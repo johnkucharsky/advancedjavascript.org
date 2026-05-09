@@ -1,33 +1,28 @@
 ---
-title: SOLID in React – Clean Architecture
-description: Learn the SOLID principles of object-oriented design and how to apply them to modern React development. Includes practical examples for each principle.
+title: SOLID Principles in React
+description: Learn SOLID principles in React with practical TypeScript examples for single responsibility, open-closed, Liskov, interfaces, and dependency inversion.
 sidebarTitle: SOLID in React
 ---
 
 # SOLID in React: Clean Architecture
 
-Clean architecture isn’t just for backend systems — it applies to frontend and React as well.
-By following the SOLID principles, you’ll write components that are easier to test, extend,
-and maintain — all while avoiding common pitfalls in growing codebases.
+SOLID is easier to apply in React when you translate the class-oriented names into component and prop design. The goal is not ceremony. The goal is to keep components focused, extensible, replaceable, and loosely coupled.
 
-- **Single responsibility principle** - Class has one job to do. Each change in requirements can be done by changing just one class
-- **Open/closed principle** - Class is happy (open) to be used by others. Class is not happy (closed) to be changed by others
-- **Liskov substitution principle** - Class can be replaced by any of its children. Children classes inherit parent's behaviours
-- **Interface segregation principle** - When classes promise each other something, they should separate these promises (interfaces)
-into many small promises, so it's easier to understand
-- **Dependency inversion principle** - When classes talk to each other in a very specific way, they both depend on each other to
-never change. Instead, classes should use promises (interfaces, parents), so classes can change as long as they keep the promise
+- **Single responsibility principle** - a component should have one clear reason to change.
+- **Open/closed principle** - a component should accept variation through props or composition instead of requiring internal edits for every new case.
+- **Liskov substitution principle** - a wrapper component should still behave like the component it wraps.
+- **Interface segregation principle** - props should be split so components are not forced to accept behavior they do not use.
+- **Dependency inversion principle** - high-level UI should depend on an abstraction, not a specific implementation.
 
 ## Single responsibility principle
 
-Don't create too big components that have too much jobs to do. Break into smaller ones, name = description. Every component has
-one responsibility, first render card, second contains button that calls the dialog component
+Avoid components that render unrelated UI and own unrelated state. In the example, the user card and edit dialog state are split so each component has a clearer job.
 
 ```tsx filename="S" copy
-import { useState } from 'react'
+import { useState } from "react";
 // bad
 const UserCard = ({ user }: { user: User }) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -42,22 +37,21 @@ const UserCard = ({ user }: { user: User }) => {
       <Button onClick={() => setOpen(true)}>edit user</Button>
       <Box>...here goes user card</Box>
     </>
-  )
-}
+  );
+};
 
 // good
 const UserCard = ({ user }: { user: User }) => {
-
   return (
     <>
       <EditUser id={user.id} />
       <Box>...here goes user card</Box>
     </>
-  )
-}
+  );
+};
 
 const EditUser = ({ id }: { id: number }) => {
-    const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -71,15 +65,13 @@ const EditUser = ({ id }: { id: number }) => {
       </Dialog>
       <Button>edit user</Button>
     </>
-  )
-}
+  );
+};
 ```
 
 ## Open/closed principle
 
-Problem with first components is that we can't pass another color without changing `FancyIconButton` code.
-In the second case, this problem is fixed, now we don't need to change `FancyIconButton2`. So, it's open to
-be used by others, closed to modification
+The first component hard-codes every supported color as a new boolean prop. Adding a color requires editing the component. The second component accepts `backgroundColor`, so new colors can be passed from outside without changing the component internals.
 
 ```tsx filename="O" copy
 // bad
@@ -87,19 +79,19 @@ const FancyIconButton = ({
   red,
   green,
 }: {
-  red?: boolean
-  green?: boolean
+  red?: boolean;
+  green?: boolean;
 }) => {
   const getBackgroundColor = () => {
     switch (true) {
       case red:
-        return 'red'
+        return "red";
       case green:
-        return 'green'
+        return "green";
       default:
-        return 'black'
+        return "black";
     }
-  }
+  };
 
   return (
     <>
@@ -110,14 +102,14 @@ const FancyIconButton = ({
         <ArrowBackTwoToneIcon />
       </IconButton>
     </>
-  )
-}
+  );
+};
 
 // good
 const FancyIconButton2 = ({
-  backgroundColor = 'black',
+  backgroundColor = "black",
 }: {
-  backgroundColor: string
+  backgroundColor: string;
 }) => {
   return (
     <>
@@ -125,20 +117,18 @@ const FancyIconButton2 = ({
         <ArrowBackTwoToneIcon />
       </IconButton>
     </>
-  )
-}
+  );
+};
 ```
 
 ## Liskov substitution principle
 
-`FancyIconButton` can be replaced by `IconButton`. Children component inherits parent's behaviours.
-This way we can have many buttons with different styles, but they all can be used same way as original
-`IconButton`
+A styled wrapper should still accept the behavior callers expect from the original button. If `FancyIconButton2` forwards normal `IconButtonProps`, it can be used anywhere an `IconButton`-like component is expected.
 
 ```tsx filename="L" copy
-import { IconButton, IconButtonProps } from '@mui/material'
+import { IconButton, IconButtonProps } from "@mui/material";
 
-const fancyStyles = {}
+const fancyStyles = {};
 // bad
 const FancyIconButton = () => {
   return (
@@ -147,8 +137,8 @@ const FancyIconButton = () => {
         <ArrowBackTwoToneIcon />
       </IconButton>
     </>
-  )
-}
+  );
+};
 
 // good
 const FancyIconButton2 = ({ ...props }: IconButtonProps) => {
@@ -158,27 +148,26 @@ const FancyIconButton2 = ({ ...props }: IconButtonProps) => {
         <ArrowBackTwoToneIcon />
       </IconButton>
     </>
-  )
-}
+  );
+};
 
 const RandomComponent = () => {
   return (
     <>
       {/*error no such props*/}
-      <FancyIconButton size={'small'} />
+      <FancyIconButton size={"small"} />
 
       {/*here ok*/}
-      <FancyIconButton2 size={'small'} />
+      <FancyIconButton2 size={"small"} />
       <IconButton onClick={() => null} />
     </>
-  )
-}
+  );
+};
 ```
 
 ## Interface segregation principle
 
-When classes promise each other something, they should separate these promises (interfaces)
-into many small promises, so it's easier to understand
+Do not force one component contract to include every possible event. Smaller prop interfaces make components easier to reuse and harder to misuse.
 
 ```tsx filename="I" copy
 import { FC } from "react";
@@ -225,13 +214,13 @@ const SubmitButton2: FC<Clickable & Hoverable> = ({ onClick, onMouseOver }) => {
 const App = () => {
   return (
     <div>
-        <h1>Interface segregation in React</h1>
+      <h1>Interface segregation in React</h1>
       {/* both are same */}
-      <SubmitButton onClick={()=>null} onMouseOver={()=>null} />
-      <SubmitButton2 onClick={()=>null} onMouseOver={()=>null} />
+      <SubmitButton onClick={() => null} onMouseOver={() => null} />
+      <SubmitButton2 onClick={() => null} onMouseOver={() => null} />
       {/* separated */}
-      <ClickableButton onClick={()=>null} />
-      <HoverableDiv onMouseOver={()=>null} />
+      <ClickableButton onClick={() => null} />
+      <HoverableDiv onMouseOver={() => null} />
     </div>
   );
 };
@@ -241,9 +230,7 @@ export default App;
 
 ## Dependency inversion principle
 
-When classes talk to each other in a very specific way, they both depend on each other to
-never change. Instead, classes should use promises (interfaces, parents), so classes can change
-as long as they keep the promise
+The UI should not need to know whether authentication comes from Firebase, local storage, or another service. It should depend on an `AuthProvider` interface and receive the implementation from outside.
 
 ```tsx filename="D" copy
 import { FC } from "react";
