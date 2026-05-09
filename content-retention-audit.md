@@ -5,8 +5,8 @@ Audit date: 2026-05-07
 Scope: `src/content/**/*.mdx`
 
 Snapshot:
-- 31 MDX content pages
-- 151 fenced code snippets
+- 29 MDX content pages
+- 135 fenced code snippets
 - Main content paths currently include `various`, not `utils`
 - No lesson content was changed for this audit
 
@@ -65,7 +65,6 @@ This should become the default for:
 - `learn-js-and-mdn/object-methods.mdx`
 - `theory/type-conversions.mdx`
 - `react/rendering.mdx`
-- `various/promises-closures-async.mdx`
 
 ### Template B: Build The Polyfill
 
@@ -149,11 +148,9 @@ These are not bad, but users are likely to skim them unless they get harder vari
 | `theory/composition-vs-inheritance.mdx` | Move function stack elsewhere. Add React composition patterns, hooks vs inheritance, render props, higher-order components, and before/after refactors. |
 | `theory/solid-react.mdx` | Useful but abstract. Make it a mini refactor story: bad component first, then SOLID-guided changes. Add tradeoffs, because SOLID can be over-applied in React. |
 | `theory/type-conversions.mdx` | Good candidate for high retention. Make every block a quiz. Add `valueOf`, `toString`, `Symbol.toPrimitive`, object-to-primitive conversion, `Object.is`, and `NaN` traps. |
-| `various/call-bind-apply.mdx` | Strong interview topic. Reduce overlap with `object-methods`, add custom `call`/`apply`, partial application, constructor behavior with bound functions, and arrow-function caveats. |
 | `various/dictionary-of-nested.mdx` | Good job-task feel. Add complexity, missing-id behavior, duplicate ids, iterative version, and TypeScript type improvements. |
 | `various/group-list-by-quarters.mdx` | High-value real task but too much in one code block. Split into three snippets, add expected input/output before code, explain `date-fns` dependency, and add missing months/sorting/year-boundary edge cases. |
 | `various/list-to-tree.mdx` | Strong practical page. Add cycle detection, missing parent handling, stable ordering, and large-list complexity. |
-| `various/promises-closures-async.mdx` | Good concepts but overlaps with event loop and closures. Reframe as output puzzles or merge weaker examples into `event-loop`. |
 | `various/sorting.mdx` | Too basic for advanced users. Add comparator pitfalls, stable vs unstable sorting, quicksort/mergesort, and "why `Array.sort()` sorts numbers wrong by default". |
 | `various/utils.mdx` | Good catalog but mixed quality. Fix `deepClone`, `fetchWithRetry`, and topological-cycle handling. Add `EventEmitter`, `LRUCache`, `memoize`, `deepEqual`, `queryString`, `once`, and `pipe/compose`. |
 

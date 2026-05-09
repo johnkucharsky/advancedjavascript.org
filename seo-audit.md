@@ -13,7 +13,7 @@ The priority recommendations from this audit have been applied in source:
 - `next-sitemap.config.js` now excludes `/get-started`, disables generic auto `lastmod`, and uses more realistic change frequencies and priorities.
 - `public/sitemap-0.xml` was updated to match the new sitemap intent without reading generated Next output.
 - High-value lessons received source-only interview-practice framing without adding new pages or code snippets.
-- The intentionally removed `/various/call-bind-apply` and `/various/promises-closures-async` routes were also removed from topic-map links and sitemap priority inputs.
+- Removed stale references to two intentionally deleted routes from topic-map links and sitemap priority inputs.
 
 ## Scope
 
